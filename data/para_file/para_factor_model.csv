@@ -1,0 +1,9 @@
+key,value
+rf_path,../../data/rf/rf.xlsx
+std_columns,"['month', 'mkt', 'smb', 'vmg']"
+yearly_mnt_period,12
+mnt_comm_trdday,21
+exclude_bottom_size,0.3
+exclude_trdday_lsyr,126
+exclude_trdday_lsmnt,15
+exclude_begin_trdday,1999-12

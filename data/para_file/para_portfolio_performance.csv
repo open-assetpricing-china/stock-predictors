@@ -1,0 +1,6 @@
+key,value
+anomaly_list,"['ep', 'market_cap', 'pe']"
+model,ch3
+start_date,2000-07
+end_date,2016-12
+rolling_period,10

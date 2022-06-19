@@ -1,0 +1,5 @@
+key,value
+neutral_var,size
+way_weight,size
+Is_neutral,yes
+anomaly_list,"['ep', 'market_cap', 'pe']"
