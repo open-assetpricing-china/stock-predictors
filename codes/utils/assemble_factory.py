@@ -132,6 +132,17 @@ def update_portfolio_rolling_performance(path_anomaly,path_factor,path_para):
 #========================================================================
 #
 def build_data(para_flag_path):
+    """Description of fun. 'build_data'
+
+    This module used to create or update a large panel data file i.e. 'basic_data.parquet' and
+    along folder './data/basic/'.
+
+    Args:
+        para_flag_path (str): the file path + file name of the input file
+        i.e. 'para_flag.csv' along folder './data/para_file/'
+    Returns:
+        None
+    """
     print('begin to build data and output file "basic_data.parquet" along folder ../data/basic/ ')
     df_flag = pd.read_csv(para_flag_path)
     flag_class = param.flag()
