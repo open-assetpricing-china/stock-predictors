@@ -1,10 +1,9 @@
 codes
-======
+=====
 
 .. toctree::
    :maxdepth: 2
 
+   utils/index
 
-API
-===
-.. include:: utils/assemble_factory.rst
+

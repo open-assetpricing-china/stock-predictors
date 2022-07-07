@@ -15,6 +15,19 @@ def update_predictor_parameters(predictors):
     return
 #
 def calculate_predictors(predictor_file_path,para_flag_path):
+    """Description:
+
+    Running this module is the step 2 for the whole algorithm.
+
+    This module is used to calculate predictors according to file './data/basic/basic_data.parquet',
+    and output the predictors in file './output/predictors/predictors.csv' .
+
+    Args:
+        predictor_file_path (str): the file path './codes/predictors/'
+        para_flag_path (str): the file path + file name of the input file i.e. './data/para_file/para_flag.csv'
+    Returns:
+        None
+    """
     print('begin to calculate predictors and output file "basic_data.parquet" along folder ../data/basic/ ')
     df_flag = pd.read_csv(para_flag_path)
     flag_class = param.flag()
@@ -51,6 +64,19 @@ def calculate_predictors(predictor_file_path,para_flag_path):
 #
 #
 def load_trading_scheme(para_path,df_path):
+    """Description:
+
+    Running this module is the step 3 for the whole algorithm.
+
+    This module is used to wash file './output/predictors/predictors.csv'
+    according to parameter file './data/para_file/para_trading_scheme.csv'.
+
+    Args:
+        para_path (str): the file path './data/para_file/para_trading_scheme.csv'
+        df_path (str): the file path + file name of the input file i.e. './output/predictors/predictors.csv'
+    Returns:
+        df (pandas.DataFrame)
+    """
     print('load trading scheme to wash file : ../output/predictors/predictors.csv')
     t0 = time.time()
     # 根据 '../../data/para_file/para_csmar_basic.csv' 中的参数, 对 csmar_bsic 进行清洗
@@ -66,7 +92,19 @@ def load_trading_scheme(para_path,df_path):
     return df
 #
 def update_portfolio_ret(para_path,df):
-    #
+    """Description:
+
+    Running this module is the step 4 for the whole algorithm.
+
+    This module is used to calculate the portfolio monthly long-short return, and output the
+    results in the file './output/portfolio_ret/para_trading_scheme.csv'.
+
+    Args:
+        para_path (str): the file path './data/para_file/para_construct_portfolio.csv'
+        df (pandas.DataFrame): df is the return of load_trading_scheme(para_path,df_path)
+    Returns:
+        portfolio_ret (pandas.DataFrame)
+    """
     print('begin to update the file: ../output/portfolio_ret/portfolio_ret.csv')
     t0 = time.time()
     para = pd.read_csv(para_path)
@@ -87,7 +125,24 @@ def update_portfolio_ret(para_path,df):
 #
 #
 def update_portfolio_performance(path_anomaly,path_factor,path_para):
-    #
+    """Description:
+
+    Running this module is the step 5 for the whole algorithm.
+
+    This module is used to calculate the regression results of portfolio long-short return.
+    In the process of regression, y is the portfolio long-short return calculated according to
+    the predictors, which is saved in the file './output/portfolio_ret/portfolio_ret.csv'.
+    Correspondingly, x in regression is the factor model, which is saved in the file
+    './output/factor_model/factor_model.csv'.
+
+    Args:
+        path_anomaly (str): the file path './output/portfolio_ret/portfolio_ret.csv'
+        path_factor (str): the file path './output/factor_model/factor_model.csv'
+        path_para (str): the file path './data/para_file/para_portfolio_performance.csv'
+    Returns:
+        anomaly_performance (pandas.DataFrame): the regression results of portfolio long-short return, which
+        is saved in the file './output/portfolio_performance/portfolio_performance.csv'.
+    """
     print('begin to update the file: ../output/portfolio_performance/portfolio_performance.csv')
     t0 = time.time()
     anomaly_ret = pd.read_csv(path_anomaly)
@@ -107,7 +162,26 @@ def update_portfolio_performance(path_anomaly,path_factor,path_para):
 #
 #
 def update_portfolio_rolling_performance(path_anomaly,path_factor,path_para):
-    #
+    """Description:
+
+    Running this module is the step 6 for the whole algorithm.
+
+    This module is used to calculate the rolling performance of the regression results of
+    portfolio long-short return. In the rolling process of regression, y is the portfolio long-short
+    return calculated according to the predictors, which is saved in the file
+    './output/portfolio_ret/portfolio_ret.csv'. Correspondingly, x in regression is the factor model,
+    which is saved in the file './output/factor_model/factor_model.csv'.
+
+    This module output the results of the rolling performance of the regression in the
+    file './output/portfolio_performance/rolling_performance_predictor.csv'
+
+    Args:
+        path_anomaly (str): the file path './output/portfolio_ret/portfolio_ret.csv'
+        path_factor (str): the file path './output/factor_model/factor_model.csv'
+        path_para (str): the file path './data/para_file/para_portfolio_performance.csv'
+    Returns:
+        None
+    """
     print('begin the updating the rolling performance of predictors')
     t0 = time.time()
     anomaly_ret = pd.read_csv(path_anomaly)
@@ -132,14 +206,14 @@ def update_portfolio_rolling_performance(path_anomaly,path_factor,path_para):
 #========================================================================
 #
 def build_data(para_flag_path):
-    """Description of fun. 'build_data'
+    """Description:
 
-    This module used to create or update a large panel data file i.e. 'basic_data.parquet' and
-    along folder './data/basic/'.
+    Running this module is the step 1 for the whole algorithm.
+
+    This module is used to create a large panel data file i.e. 'basic_data.parquet' and along folder './data/basic/'.
 
     Args:
-        para_flag_path (str): the file path + file name of the input file
-        i.e. 'para_flag.csv' along folder './data/para_file/'
+        para_flag_path (str): the file path + file name of the input file i.e. 'para_flag.csv' along folder './data/para_file/'
     Returns:
         None
     """

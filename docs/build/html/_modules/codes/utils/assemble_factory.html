@@ -38,7 +38,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../data/index.html">data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../output/index.html">output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../codes/index.html">codes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../codes/index.html#api">API</a></li>
 </ul>
 
         </div>
@@ -82,7 +81,20 @@
     <span class="n">df_para</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;../data/para_file/para_construct_portfolio.csv&#39;</span><span class="p">)</span>
     <span class="k">return</span>
 <span class="c1">#</span>
-<span class="k">def</span> <span class="nf">calculate_predictors</span><span class="p">(</span><span class="n">predictor_file_path</span><span class="p">,</span><span class="n">para_flag_path</span><span class="p">):</span>
+<div class="viewcode-block" id="calculate_predictors"><a class="viewcode-back" href="../../../codes/utils/index.html#codes.utils.assemble_factory.calculate_predictors">[docs]</a><span class="k">def</span> <span class="nf">calculate_predictors</span><span class="p">(</span><span class="n">predictor_file_path</span><span class="p">,</span><span class="n">para_flag_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Description:</span>
+
+<span class="sd">    Running this module is the step 2 for the whole algorithm.</span>
+
+<span class="sd">    This module is used to calculate predictors according to file &#39;./data/basic/basic_data.parquet&#39;,</span>
+<span class="sd">    and output the predictors in file &#39;./output/predictors/predictors.csv&#39; .</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        predictor_file_path (str): the file path &#39;./codes/predictors/&#39;</span>
+<span class="sd">        para_flag_path (str): the file path + file name of the input file i.e. &#39;./data/para_file/para_flag.csv&#39;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;begin to calculate predictors and output file &quot;basic_data.parquet&quot; along folder ../data/basic/ &#39;</span><span class="p">)</span>
     <span class="n">df_flag</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">para_flag_path</span><span class="p">)</span>
     <span class="n">flag_class</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">flag</span><span class="p">()</span>
@@ -114,11 +126,24 @@
         <span class="k">return</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39; you input wrong parameters of &quot;Is_calculate_predictors&quot; in &#39;</span>
-                        <span class="s1">&#39;file ../data/para_file/para_flag.csv&#39;</span><span class="p">)</span>
+                        <span class="s1">&#39;file ../data/para_file/para_flag.csv&#39;</span><span class="p">)</span></div>
 
 <span class="c1">#</span>
 <span class="c1">#</span>
-<span class="k">def</span> <span class="nf">load_trading_scheme</span><span class="p">(</span><span class="n">para_path</span><span class="p">,</span><span class="n">df_path</span><span class="p">):</span>
+<div class="viewcode-block" id="load_trading_scheme"><a class="viewcode-back" href="../../../codes/utils/index.html#codes.utils.assemble_factory.load_trading_scheme">[docs]</a><span class="k">def</span> <span class="nf">load_trading_scheme</span><span class="p">(</span><span class="n">para_path</span><span class="p">,</span><span class="n">df_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Description:</span>
+
+<span class="sd">    Running this module is the step 3 for the whole algorithm.</span>
+
+<span class="sd">    This module is used to wash file &#39;./output/predictors/predictors.csv&#39;</span>
+<span class="sd">    according to parameter file &#39;./data/para_file/para_trading_scheme.csv&#39;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        para_path (str): the file path &#39;./data/para_file/para_trading_scheme.csv&#39;</span>
+<span class="sd">        df_path (str): the file path + file name of the input file i.e. &#39;./output/predictors/predictors.csv&#39;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        df (pandas.DataFrame)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load trading scheme to wash file : ../output/predictors/predictors.csv&#39;</span><span class="p">)</span>
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="c1"># 根据 &#39;../../data/para_file/para_csmar_basic.csv&#39; 中的参数, 对 csmar_bsic 进行清洗</span>
@@ -131,10 +156,22 @@
     <span class="n">df_class</span> <span class="o">=</span> <span class="n">data_expert</span><span class="o">.</span><span class="n">expert_handle_df</span><span class="p">(</span><span class="n">para</span><span class="o">=</span><span class="n">para_washing</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df_class</span><span class="o">.</span><span class="n">handle_df</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done! of washing with file the time cost&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">df</span>
+    <span class="k">return</span> <span class="n">df</span></div>
 <span class="c1">#</span>
-<span class="k">def</span> <span class="nf">update_portfolio_ret</span><span class="p">(</span><span class="n">para_path</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
-    <span class="c1">#</span>
+<div class="viewcode-block" id="update_portfolio_ret"><a class="viewcode-back" href="../../../codes/utils/index.html#codes.utils.assemble_factory.update_portfolio_ret">[docs]</a><span class="k">def</span> <span class="nf">update_portfolio_ret</span><span class="p">(</span><span class="n">para_path</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Description:</span>
+
+<span class="sd">    Running this module is the step 4 for the whole algorithm.</span>
+
+<span class="sd">    This module is used to calculate the portfolio monthly long-short return, and output the</span>
+<span class="sd">    results in the file &#39;./output/portfolio_ret/para_trading_scheme.csv&#39;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        para_path (str): the file path &#39;./data/para_file/para_construct_portfolio.csv&#39;</span>
+<span class="sd">        df (pandas.DataFrame): df is the return of load_trading_scheme(para_path,df_path)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        portfolio_ret (pandas.DataFrame)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;begin to update the file: ../output/portfolio_ret/portfolio_ret.csv&#39;</span><span class="p">)</span>
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">para</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">para_path</span><span class="p">)</span>
@@ -150,12 +187,29 @@
     <span class="c1">#</span>
     <span class="n">portfolio_ret</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;../output/portfolio_ret/portfolio_ret.csv&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done! of updating with the time cost:&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">portfolio_ret</span>
+    <span class="k">return</span> <span class="n">portfolio_ret</span></div>
 <span class="c1">#</span>
 <span class="c1">#</span>
 <span class="c1">#</span>
-<span class="k">def</span> <span class="nf">update_portfolio_performance</span><span class="p">(</span><span class="n">path_anomaly</span><span class="p">,</span><span class="n">path_factor</span><span class="p">,</span><span class="n">path_para</span><span class="p">):</span>
-    <span class="c1">#</span>
+<div class="viewcode-block" id="update_portfolio_performance"><a class="viewcode-back" href="../../../codes/utils/index.html#codes.utils.assemble_factory.update_portfolio_performance">[docs]</a><span class="k">def</span> <span class="nf">update_portfolio_performance</span><span class="p">(</span><span class="n">path_anomaly</span><span class="p">,</span><span class="n">path_factor</span><span class="p">,</span><span class="n">path_para</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Description:</span>
+
+<span class="sd">    Running this module is the step 5 for the whole algorithm.</span>
+
+<span class="sd">    This module is used to calculate the regression results of portfolio long-short return.</span>
+<span class="sd">    In the process of regression, y is the portfolio long-short return calculated according to</span>
+<span class="sd">    the predictors, which is saved in the file &#39;./output/portfolio_ret/portfolio_ret.csv&#39;.</span>
+<span class="sd">    Correspondingly, x in regression is the factor model, which is saved in the file</span>
+<span class="sd">    &#39;./output/factor_model/factor_model.csv&#39;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path_anomaly (str): the file path &#39;./output/portfolio_ret/portfolio_ret.csv&#39;</span>
+<span class="sd">        path_factor (str): the file path &#39;./output/factor_model/factor_model.csv&#39;</span>
+<span class="sd">        path_para (str): the file path &#39;./data/para_file/para_portfolio_performance.csv&#39;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        anomaly_performance (pandas.DataFrame): the regression results of portfolio long-short return, which</span>
+<span class="sd">        is saved in the file &#39;./output/portfolio_performance/portfolio_performance.csv&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;begin to update the file: ../output/portfolio_performance/portfolio_performance.csv&#39;</span><span class="p">)</span>
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">anomaly_ret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_anomaly</span><span class="p">)</span>
@@ -171,11 +225,30 @@
     <span class="n">anomaly_performance</span> <span class="o">=</span> <span class="n">anomaly_performance_class</span><span class="o">.</span><span class="n">handle_anomaly_performance</span><span class="p">()</span> <span class="c1"># 得出异象表现。</span>
     <span class="n">anomaly_performance</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;../output/portfolio_performance/portfolio_performance.csv&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done! of updating with the time cost:&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">anomaly_performance</span>
+    <span class="k">return</span> <span class="n">anomaly_performance</span></div>
 <span class="c1">#</span>
 <span class="c1">#</span>
-<span class="k">def</span> <span class="nf">update_portfolio_rolling_performance</span><span class="p">(</span><span class="n">path_anomaly</span><span class="p">,</span><span class="n">path_factor</span><span class="p">,</span><span class="n">path_para</span><span class="p">):</span>
-    <span class="c1">#</span>
+<div class="viewcode-block" id="update_portfolio_rolling_performance"><a class="viewcode-back" href="../../../codes/utils/index.html#codes.utils.assemble_factory.update_portfolio_rolling_performance">[docs]</a><span class="k">def</span> <span class="nf">update_portfolio_rolling_performance</span><span class="p">(</span><span class="n">path_anomaly</span><span class="p">,</span><span class="n">path_factor</span><span class="p">,</span><span class="n">path_para</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Description:</span>
+
+<span class="sd">    Running this module is the step 6 for the whole algorithm.</span>
+
+<span class="sd">    This module is used to calculate the rolling performance of the regression results of</span>
+<span class="sd">    portfolio long-short return. In the rolling process of regression, y is the portfolio long-short</span>
+<span class="sd">    return calculated according to the predictors, which is saved in the file</span>
+<span class="sd">    &#39;./output/portfolio_ret/portfolio_ret.csv&#39;. Correspondingly, x in regression is the factor model,</span>
+<span class="sd">    which is saved in the file &#39;./output/factor_model/factor_model.csv&#39;.</span>
+
+<span class="sd">    This module output the results of the rolling performance of the regression in the</span>
+<span class="sd">    file &#39;./output/portfolio_performance/rolling_performance_predictor.csv&#39;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path_anomaly (str): the file path &#39;./output/portfolio_ret/portfolio_ret.csv&#39;</span>
+<span class="sd">        path_factor (str): the file path &#39;./output/factor_model/factor_model.csv&#39;</span>
+<span class="sd">        path_para (str): the file path &#39;./data/para_file/para_portfolio_performance.csv&#39;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;begin the updating the rolling performance of predictors&#39;</span><span class="p">)</span>
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">anomaly_ret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_anomaly</span><span class="p">)</span>
@@ -196,18 +269,18 @@
         <span class="n">df</span> <span class="o">=</span> <span class="n">anomaly_performance_rolling</span><span class="p">[</span><span class="n">it</span><span class="p">]</span>
         <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;../output/portfolio_performance/&#39;</span> <span class="o">+</span> <span class="n">file_name</span> <span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done! of updating with the time cost:&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
-    <span class="k">return</span>
+    <span class="k">return</span></div>
 <span class="c1">#========================================================================</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="build_data"><a class="viewcode-back" href="../../../codes/utils/assemble_factory.html#codes.utils.assemble_factory.build_data">[docs]</a><span class="k">def</span> <span class="nf">build_data</span><span class="p">(</span><span class="n">para_flag_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Description of fun. &#39;build_data&#39;</span>
+<div class="viewcode-block" id="build_data"><a class="viewcode-back" href="../../../codes/utils/index.html#codes.utils.assemble_factory.build_data">[docs]</a><span class="k">def</span> <span class="nf">build_data</span><span class="p">(</span><span class="n">para_flag_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Description:</span>
 
-<span class="sd">    This module used to create or update a large panel data file i.e. &#39;basic_data.parquet&#39; and</span>
-<span class="sd">    along folder &#39;./data/basic/&#39;.</span>
+<span class="sd">    Running this module is the step 1 for the whole algorithm.</span>
+
+<span class="sd">    This module is used to create a large panel data file i.e. &#39;basic_data.parquet&#39; and along folder &#39;./data/basic/&#39;.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        para_flag_path (str): the file path + file name of the input file</span>
-<span class="sd">        i.e. &#39;para_flag.csv&#39; along folder &#39;./data/para_file/&#39;</span>
+<span class="sd">        para_flag_path (str): the file path + file name of the input file i.e. &#39;para_flag.csv&#39; along folder &#39;./data/para_file/&#39;</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
