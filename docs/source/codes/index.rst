@@ -5,5 +5,6 @@ codes
    :maxdepth: 2
 
    utils/index
+   predictors/index
 
 

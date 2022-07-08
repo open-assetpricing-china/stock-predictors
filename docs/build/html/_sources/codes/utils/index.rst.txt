@@ -1,5 +1,5 @@
 
-assemble_factory
-==================
+utils
+======
 
-.. include:: assemble_factory.rst
+.. include:: assemble_factory/assemble_factory.rst
