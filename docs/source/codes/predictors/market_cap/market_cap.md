@@ -14,7 +14,7 @@ def equation(df):
     return df
 ```
 
-This definition is in written in file <font color=green>'./codes/predictors/market_cap.py'</font>.
+This definition is written in file <font color=green>'./codes/predictors/market_cap.py'</font>.
 Here, <font color=blue>'size'</font> represents the market value.
 
 

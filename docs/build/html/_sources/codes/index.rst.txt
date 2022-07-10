@@ -6,5 +6,6 @@ codes
 
    utils/index
    predictors/index
+   params/index
 
 

@@ -12,13 +12,15 @@ def equation(df):
     df['ep'] = df['B003000000'] / df['clsprc'] # df['B00300000'] -> eps
     return df
 ```
-This definition is in written in file <font color=green>'./codes/predictors/ep.py'</font>.
+This definition is written in file <font color=green>'./codes/predictors/ep.py'</font>.
 Here, <font color=blue>'clsprc'</font> represent the close price, 
 and <font color=blue>'B003000000'</font>  represents 
 the  Earnings Per Share (eps) which from the 
 CSMAR <font color=red>csmar_master.sas7bdat</font> dataset.
-
-Like <font color=green>'ep.py'</font> file, people can add new predictor in the 
-path <font color=green>'./codes/predictors/'</font> by adding 
-new <font color=green>'predictor_name.py'</font> file here.
  
+>Tips:
+ * Like <font color=green>'ep.py'</font> file, people can add new predictor file 
+   <font color=green>'ep.py'</font> in the path <font color=green>'./codes/predictors/'</font>. 
+ * <font color=blue>'predictor_name'</font> should keep 
+   consist with <font color=blue>para['predictor']</font>
+
