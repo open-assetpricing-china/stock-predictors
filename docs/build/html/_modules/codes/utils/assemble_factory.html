@@ -233,13 +233,13 @@
 
 <span class="sd">    Running this module is the step 6 for the whole algorithm.</span>
 
-<span class="sd">    This module is used to calculate the rolling performance of the regression results of</span>
-<span class="sd">    portfolio long-short return. In the rolling process of regression, y is the portfolio long-short</span>
+<span class="sd">    This module is used to calculate the rolling_performance_ep performance of the regression results of</span>
+<span class="sd">    portfolio long-short return. In the rolling_performance_ep process of regression, y is the portfolio long-short</span>
 <span class="sd">    return calculated according to the predictors, which is saved in the file</span>
 <span class="sd">    &#39;./output/portfolio_ret/portfolio_ret.csv&#39;. Correspondingly, x in regression is the factor model,</span>
 <span class="sd">    which is saved in the file &#39;./output/factor_model/factor_model.csv&#39;.</span>
 
-<span class="sd">    This module output the results of the rolling performance of the regression in the</span>
+<span class="sd">    This module output the results of the rolling_performance_ep performance of the regression in the</span>
 <span class="sd">    file &#39;./output/portfolio_performance/rolling_performance_predictor.csv&#39;</span>
 
 <span class="sd">    Args:</span>
@@ -249,7 +249,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;begin the updating the rolling performance of predictors&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;begin the updating the rolling_performance_ep performance of predictors&#39;</span><span class="p">)</span>
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">anomaly_ret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_anomaly</span><span class="p">)</span>
     <span class="n">factor_ret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_factor</span><span class="p">)</span>
