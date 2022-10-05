@@ -3,10 +3,11 @@ import pandas as pd
 class csmar_trading(object):
     def __init__(self):
         self.trading_data_path = '../data/csmar/csmar_trade/csmar_t_mnth.sas7bdat'
-        self.std_columns = ['Stkcd', 'Trdmnt', 'Opndt', 'Mopnprc', 'Clsdt', 'Mclsprc', 'Msmvttl','Ndaytrd','Mretwd']
+        self.std_columns = ['Stkcd', 'Trdmnt', 'Opndt', 'Mopnprc', 'Clsdt', 'Mclsprc', 'Msmvttl','Ndaytrd','Mretwd',
+                            'Mnvaltrd']
         self.columns_rename = {'Stkcd': 'stkcd','Trdmnt': 'month','Opndt': 'open_day','Mopnprc': 'opnprc',
                                'Clsdt': 'close_day','Mclsprc': 'clsprc','Msmvttl': 'size','Ndaytrd': 'trdday',
-                               'Mretwd': 'mret'}
+                               'Mretwd': 'mret', 'Mnvaltrd': 'mtrdvalue'}
     def get_raw_trading_data(self):
         df = pd.read_sas(self.trading_data_path)
         return df
