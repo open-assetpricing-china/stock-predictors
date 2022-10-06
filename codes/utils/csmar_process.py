@@ -23,7 +23,7 @@ class csmar_trading(object):
         df.month = df.month.apply(lambda x: str(x)[:4] + '-' + str(x)[4:6])
         df['month'] = pd.to_datetime(df['month'], format='%Y-%m-%d')
         df.month = df.month.dt.strftime('%Y-%m')
-        df = df[(df.month > '1999-12') & (df.month < '2020-01')]
+        df = df[(df.month > '1999-12') & (df.month < '2022-01')]
         return df
     def output_trading_data(self):
         df = self.get_raw_trading_data()
@@ -50,7 +50,7 @@ class csmar_finance_raw(object):
         df['stkcd'] = df['stkcd'].apply(lambda x: str(x)[2:8])
         df['month'] = pd.to_datetime(df['month'], format='%Y-%m-%d')
         df.month = df.month.dt.strftime('%Y-%m')
-        df = df[(df.month > '1999-12') & (df.month < '2020-01')]
+        df = df[(df.month > '1999-12') & (df.month < '2022-01')]
         return df
     def output_finance_data(self):
         df = self.get_raw_finance_data()
