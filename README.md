@@ -89,6 +89,8 @@
 
 * Notes:  
 > The frequency of data: monthly.
+>
 > Portfolio is constructed by buying the highest expected
 return stocks (decile 10) and selling the lowest (decile 1).
+>
 > Predictors are scaled to range (-1, 1).
