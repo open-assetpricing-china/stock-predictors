@@ -10,7 +10,6 @@ def csmar_t_mnth():
     para['Mclsprc'] = 'Monthly Closing Price (MCLSPRC)'
     para['Mnshrtrd'] = 'Number of Shares Traded in Month (MNSHRTRD)'  # 当月交易的股票数量（MNSHRTRD）
     para['Mnvaltrd'] = 'Value of Shares Traded in Month (MNVALTRD)'  # 当月交易的股票价值（MNVALTRD）
-    para['Mnvaltrd'] = 'Market Value of Tradable Shares (MSMVOSD)'  # 可交易股份的市场价值（MSMVOSD）
     para['Msmvosd'] = 'Market Value of Tradable Shares (MSMVOSD)'  # 可交易股份的市场价值（MSMVOSD）
     para['Msmvttl'] = 'Total Market Value (MSMVTTL)'  # 总市值（MSMVTTL）
     para['Ndaytrd'] = 'Number of Days of Monthly Trading (NDAYTRD)'  # 月度交易日数量
@@ -22,6 +21,14 @@ def csmar_t_mnth():
     para['Ahvaltrd_M'] = 'Monthly After-hours Trading Turnover (AHVALTRD_M)'  # 月度盘后交易额（AHVALTRD_M）
     para['CAPCHGDT_o'] = 'Share Outstanding Change Date (added by WRDS) (CAPCHGDT_O)'  # 未偿股份变更日期（由WRDS添加）（CAPCHGDT_O）
     return para
+#
+def csmar_t_mnth_rename():
+    std_columns = ['Stkcd', 'Trdmnt', 'Opndt', 'Mopnprc', 'Clsdt', 'Mclsprc', 'Msmvttl', 'Ndaytrd', 'Mretwd']
+    columns_rename = {'Stkcd': 'stkcd', 'Trdmnt': 'month', 'Opndt': 'open_day', 'Mopnprc': 'opnprc',
+                           'Clsdt': 'close_day', 'Mclsprc': 'clsprc', 'Msmvttl': 'size', 'Ndaytrd': 'trdday',
+                           'Mretwd': 'mret'}
+    return std_columns, columns_rename
+#
 #
 def csmar_financial_income_statement():
     para = {}

@@ -64,7 +64,7 @@ class csmar_finance_postprocess_raw(object):
     def __init__(self, df):
         self.df = df.copy()
     def get_std_trading_month(self): # 这里可以调整 data_range
-        date_range = pd.date_range(start='2000-01', end='2020-01', freq='1M')
+        date_range = pd.date_range(start='2000-01', end='2022-01', freq='1M')
         date_range = pd.DataFrame(date_range)
         date_range.rename(columns={0: 'date'}, inplace=True)
         date_range.date = date_range.date.dt.strftime('%Y-%m')
@@ -105,6 +105,7 @@ class csmar_basic_add_predictor(object):
     def __init__(self,df,para):
         self.df = df
         self.para = para
+    #
     def add_predictor(self):
         predictor_list = self.para['predictor']
         r_f_index = self.para['relate_finance_index']
@@ -127,3 +128,31 @@ class csmar_basic_add_predictor(object):
                 df = df.copy()
                 p_list.append(it)
         return df, p_list
+#
+class csmar_basic_predictor_postprocess(object):
+    def __init__(self):
+        self.df = pd.read_csv('../output/predictors/predictors.csv')  # 读取 predictors 数据
+        self.para = pd.read_csv('../data/para_file/para_construct_portfolio.csv')  # 读取 predictors name list  数据
+    def get_predictor_list(self):
+        self.para.set_index('key', inplace=True)
+        para_dict = {x: self.para.T.to_dict()[x]['value'] for x in self.para.T.to_dict().keys()}
+        self.predictor_list = eval(para_dict['anomaly_list'])
+    def scale_minus1to1_rank(self): # 将 predictors scale to range (-1, 1),
+        print('Scale the predictors to range (-1, 1)') # 采用对 rank 的方式
+        self.get_predictor_list()
+        print('predictors: \n', self.predictor_list)
+        for ii in range(len(self.predictor_list)):
+            it = self.predictor_list[ii]
+            unique_count = self.df.dropna(subset=[it]).groupby(['month'])[it].unique().apply(len)
+            unique_count = pd.DataFrame(unique_count).reset_index()
+            unique_count.columns = ['month', 'count']
+            self.df = pd.merge(self.df, unique_count, how='left', on=['month'])
+            # ranking, and then standardize the data
+            self.df['%s_rank' % it] = self.df.groupby(['month'])['%s' % it].rank(method='dense')
+            self.df['rank_%s' % it] = (self.df['%s_rank' % it] - 1) / (self.df['count'] - 1) * 2 - 1
+            self.df = self.df.drop(['%s_rank' % it, '%s' % it, 'count'], axis=1)
+            self.df.rename(columns={'rank_%s' % it : it}, inplace=True)
+        #self.df = self.df.fillna(0) # 如果将空值全部填零，会导致做 decile 的时候，有的 predictor 不能给出全部十分位数
+    def output_predictor(self):
+        self.scale_minus1to1_rank()  # 采用 rank 的方式 scale to (-1,1) 好处是排除异常打和异常小的情况，缺点是从小到大分布太平均
+        self.df.to_csv('../output/predictors/predictors.csv')

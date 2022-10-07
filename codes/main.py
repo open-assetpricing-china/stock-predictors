@@ -1,5 +1,5 @@
 from codes.utils.assemble_factory import build_data
-from codes.utils.assemble_factory import calculate_predictors, load_trading_scheme
+from codes.utils.assemble_factory import calculate_predictors, load_trading_scheme, update_predictors
 from codes.utils.assemble_factory import update_portfolio_ret
 from codes.utils.assemble_factory import update_portfolio_performance
 from codes.utils.assemble_factory import update_portfolio_rolling_performance
@@ -10,6 +10,8 @@ if __name__ == '__main__':
     #running build_csmar_basic() cost: 289s
     calculate_predictors(predictor_file_path = './predictors/',
                          para_flag_path = '../data/para_file/para_flag.csv')
+    #
+    update_predictors() # post-process of predictors, including: scaling to (-1,1)
     #
     df = load_trading_scheme(para_path='../data/para_file/para_trading_scheme.csv',
                              df_path='../output/predictors/predictors.csv')

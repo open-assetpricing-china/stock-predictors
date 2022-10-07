@@ -1,6 +1,6 @@
 key,value
-anomaly_list,"['ep', 'market_cap', 'pe']"
+anomaly_list,"['bm', 'cash', 'cashdebt']"
 model,ch3
 start_date,2000-07
-end_date,2016-12
+end_date,2021-12
 rolling_period,10

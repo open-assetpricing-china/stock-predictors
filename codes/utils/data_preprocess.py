@@ -56,7 +56,9 @@ class  df_preprocessing(object):
                                      comm_trdday=self.para['mnt_comm_trdday'],
                                      period=self.para['yearly_mnt_period']) # 得到年度交易日数量
         self.df['trdday_lastmon'] = self.df['trdday']  # 得到月度交易日数量
+        #
         df = self.df.dropna()
+        #
         return df
 #
 class df_process_size_and_ret(object):

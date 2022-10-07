@@ -62,6 +62,13 @@ def calculate_predictors(predictor_file_path,para_flag_path):
                         'file ../data/para_file/para_flag.csv')
 
 #
+def update_predictors():
+    predictor_postprocess = csmar_process.csmar_basic_predictor_postprocess()
+    t0 = time.time()
+    predictor_postprocess.output_predictor()
+    print('Done! of update predictors with time cost:', time.time() - t0)
+    return
+#
 #
 def load_trading_scheme(para_path,df_path):
     """Description:

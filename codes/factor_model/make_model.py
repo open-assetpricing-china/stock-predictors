@@ -49,7 +49,7 @@ def update_factor_model(para_path,df):
 #
 if __name__ == '__main__':
     # 用来更新 factor model
-    df = pd.read_parquet('../../data/csmar/basic/csmar_basic.parquet')
+    df = pd.read_parquet('../../data/basic/basic_data.parquet')
     df = washing_data(para_path='../../data/para_file/para_factor_model.csv',
                       df=df)
     update_factor_model(para_path='../../data/para_file/para_factor_model.csv',

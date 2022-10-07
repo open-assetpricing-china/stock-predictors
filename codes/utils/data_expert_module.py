@@ -34,7 +34,7 @@ def factor_process(df,para):
     factor_ret_reform = data_factor.factor_ret_canonical_form(factor_ret=factor_ret,para=para_factor)
     factor_ret = factor_ret_reform.canonicalize()
     return factor_ret
-#===================================================
+#===============================================================================================
 def anomalies_process(df, para):
     df1 = df.copy()
     para_anomaly = para
@@ -72,7 +72,7 @@ def anomalies_process(df, para):
     anomaly_ret_reform = data_anomaly.anomalies_ret_canonical_form(anomaly_ret=anomaly_ret,para=para_)
     anomaly_ret = anomaly_ret_reform.canonicalize_()
     return anomaly_ret
-#=============================================
+#=========================================================================================================
 def panel_process_ch3(df,factor,para):
     df1 = df
     factor_ret = factor

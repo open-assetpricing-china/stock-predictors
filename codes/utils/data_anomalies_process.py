@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 #==================================================================================================
 # 两分组函数
 def split_2(x, var):
@@ -27,6 +28,10 @@ def split_size_10(x, var):
     x.loc[(x[var] >= x[var].quantile(0.1)) & (x[var] < x[var].quantile(0.2)), 'group_' + var] = 'S2'
     x.loc[x[var] < x[var].quantile(0.1), 'group_' + var] = 'S1'
     return x
+def split_size_2(x, var):  # 2 groups
+    x.loc[x[var] >= x[var].quantile(0.5), 'group_' + var] = 'S2'
+    x.loc[x[var] < x[var].quantile(0.5), 'group_' + var] = 'S1'
+    return x
 def split_anomaly_10(x, var):
     x.loc[x[var] >= x[var].quantile(0.9), 'group_' + var] = 'A10'
     x.loc[(x[var] >= x[var].quantile(0.8)) & (x[var] < x[var].quantile(0.9)), 'group_' + var] = 'A9'
@@ -39,16 +44,20 @@ def split_anomaly_10(x, var):
     x.loc[(x[var] >= x[var].quantile(0.1)) & (x[var] < x[var].quantile(0.2)), 'group_' + var] = 'A2'
     x.loc[x[var] < x[var].quantile(0.1), 'group_' + var] = 'A1'
     return x
-#===================================================================================
+#=========================================================================================
 class anomalies_group_quantile(object):
-    def neutral_split(self, df, para):
+    def neutral_split_10(self, df, para):
         df1 = df.copy()
         df1 = df1.groupby(['month']).apply(split_size_10, var = para['neutral_var']).reset_index(drop=True) # 对 neutral_var 进行10分组
+        return df1
+    def neutral_split_2(self, df, para):
+        df1 = df.copy()
+        df1 = df1.groupby(['month']).apply(split_size_2, var = para['neutral_var']).reset_index(drop=True) # 对 neutral_var 进行 2 分组
         return df1
     def anomay_split(self,df,para):
         df1 = df.copy()
         if para['Is_neutral'] == 'yes':
-            df1 = self.neutral_split(df=df1,para=para)
+            df1 = self.neutral_split_2(df=df1,para=para)
             df1 = df1.groupby(['month', 'group_'+para['neutral_var']]).apply(
                 split_anomaly_10, var = para['anomaly']).reset_index(drop=True) # 采用序贯分组
             df1['portfolio_name'] = df1['group_' + para['neutral_var']]  + '/' + df1['group_' + para['anomaly']] #得到分组组合名称
@@ -80,55 +89,62 @@ class anomalies_ret_group(object):
         port_ret = port_ret.copy()
         port_ret_ew = port_ret_ew.copy()
         if para['Is_neutral'] == 'yes':
-            port_ret['1-10'] = (port_ret['S1/A1'] + port_ret['S2/A1'] + port_ret['S3/A1'] + port_ret['S4/A1'] +
-                                port_ret['S5/A1'] + port_ret['S6/A1'] + port_ret['S7/A1'] + port_ret['S8/A1'] +
-                                port_ret['S9/A1'] + port_ret['S10/A1']) / 10 - \
-                               (port_ret['S1/A10'] + port_ret['S2/A10'] + port_ret['S3/A10'] + port_ret['S4/A10'] +
-                                port_ret['S5/A10'] + port_ret['S6/A10'] + port_ret['S7/A10'] + port_ret['S8/A10'] +
-                                port_ret['S9/A10'] + port_ret['S10/A10']) / 10
-            port_ret_ew['1-10'] = (port_ret_ew['S1/A1'] + port_ret_ew['S2/A1'] + port_ret_ew['S3/A1'] + port_ret_ew['S4/A1'] +
-                                   port_ret_ew['S5/A1'] + port_ret_ew['S6/A1'] + port_ret_ew['S7/A1'] + port_ret_ew['S8/A1'] +
-                                   port_ret_ew['S9/A1'] + port_ret_ew['S10/A1']) / 10 - \
-                                  (port_ret_ew['S1/A10'] + port_ret_ew['S2/A10'] + port_ret_ew['S3/A10'] + port_ret_ew['S4/A10'] +
-                                   port_ret_ew['S5/A10'] + port_ret_ew['S6/A10'] + port_ret_ew['S7/A10'] + port_ret_ew['S8/A10'] +
-                                   port_ret_ew['S9/A10'] + port_ret_ew['S10/A10']) /10
+            port_ret['L-S'] = (port_ret['S1/A10'] + port_ret['S2/A10']) / 2 - \
+                               (port_ret['S1/A1'] + port_ret['S2/A1'] ) / 2
+            port_ret_ew['L-S'] = (port_ret_ew['S1/A10'] + port_ret_ew['S2/A10']) / 2 - \
+                                  (port_ret_ew['S1/A1'] + port_ret_ew['S2/A1']  ) /2
         elif para['Is_neutral'] == 'no':
-            port_ret['1-10'] = port_ret['A1'] - port_ret['A10']
-            port_ret_ew['1-10'] = port_ret_ew['A1'] - port_ret_ew['A10']
+            port_ret['L-S'] = port_ret['A10'] - port_ret['A1']
+            port_ret_ew['L-S'] = port_ret_ew['A10'] - port_ret_ew['A1']
         else:
             raise Exception('set wrong parameter of para[Is_neutral]')
         '''得到 anomaly_ret'''
-        anomaly_ret = port_ret.loc[:, ['1-10']].copy()
+        anomaly_ret = port_ret.loc[:, ['L-S']].copy()
         anomaly_ret = anomaly_ret.reset_index()
-        anomaly_ret.columns = ['month', '1-10']
+        anomaly_ret.columns = ['month', 'L-S']
 
-        anomaly_ret_ew = port_ret_ew.loc[:, ['1-10']].copy()
+        anomaly_ret_ew = port_ret_ew.loc[:, ['L-S']].copy()
         anomaly_ret_ew = anomaly_ret_ew.reset_index()
-        anomaly_ret_ew.columns = ['month', '1-10']
-        anomaly_ret_ew.rename(columns={'1-10':'1-10-ew'},inplace=True)
+        anomaly_ret_ew.columns = ['month', 'L-S']
+        anomaly_ret_ew.rename(columns={'L-S':'L-S-ew'},inplace=True)
 
         df_anomaly_ret = pd.merge(anomaly_ret,anomaly_ret_ew,on='month')
         return df_anomaly_ret
     def anomaly_ret_long_short_(self, port_ret,para):
         port_ret = port_ret.copy()
         if para['Is_neutral'] == 'yes':
-            port_ret['1-10'] = (port_ret['S1/A1'] + port_ret['S2/A1'] + port_ret['S3/A1'] + port_ret['S4/A1'] +
-                                port_ret['S5/A1'] + port_ret['S6/A1'] + port_ret['S7/A1'] + port_ret['S8/A1'] +
-                                port_ret['S9/A1'] + port_ret['S10/A1']) / 10 - \
-                               (port_ret['S1/A10'] + port_ret['S2/A10'] + port_ret['S3/A10'] + port_ret['S4/A10'] +
-                                port_ret['S5/A10'] + port_ret['S6/A10'] + port_ret['S7/A10'] + port_ret['S8/A10'] +
-                                port_ret['S9/A10'] + port_ret['S10/A10']) / 10
+            try:
+                port_ret['L-S'] = (port_ret['S1/A10'] + port_ret['S2/A10'] ) / 2 - \
+                                  (port_ret['S1/A1'] + port_ret['S2/A1'] ) / 10
+            except KeyError as e:
+                print('key error', e)
+                print('calculate long-short ret by predictor <' + para['anomaly'] +
+                      '> failed may due to incomplete deciles ')
+                print('deciles:',port_ret.columns)
+                port_ret['L-S'] = np.nan
+            else:
+                port_ret['L-S'] = (port_ret['S1/A10'] + port_ret['S2/A10'] ) / 2 - \
+                                  (port_ret['S1/A1'] + port_ret['S2/A1'] ) / 10
         elif para['Is_neutral'] == 'no':
-            port_ret['1-10'] = port_ret['A1'] - port_ret['A10']
+            try:
+                port_ret['L-S'] = port_ret['A10'] - port_ret['A1']
+            except KeyError as e:
+                print('key error', e)
+                print('calculate long-short ret by predictor <' + para['anomaly'] +
+                      '> failed may due to incomplete deciles ')
+                print('deciles:',port_ret.columns)
+                port_ret['L-S'] = np.nan
+            else:
+                port_ret['L-S'] = port_ret['A10'] - port_ret['A1']
         else:
             raise Exception('set wrong parameter of para[Is_neutral]')
         # 得到 anomaly_ret
-        anomaly_ret = port_ret.loc[:, ['1-10']].copy()
+        anomaly_ret = port_ret.loc[:, ['L-S']].copy()
         anomaly_ret = anomaly_ret.reset_index()
-        anomaly_ret.columns = ['month', '1-10']
-        anomaly_ret.rename(columns={'1-10': para['anomaly']}, inplace=True)
+        anomaly_ret.columns = ['month', 'L-S']
+        anomaly_ret.rename(columns={'L-S': para['anomaly']}, inplace=True)
         return anomaly_ret
-#====================================================================
+#====================================================================================
 class anomalies_ret_canonical_form(object):
     def __init__(self,anomaly_ret,para):
         self.anomaly_ret = anomaly_ret
@@ -142,4 +158,3 @@ class anomalies_ret_canonical_form(object):
     def canonicalize_(self):
         self.anomaly_ret = self.anomaly_ret[self.para['columns']]
         return self.anomaly_ret
-

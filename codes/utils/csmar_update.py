@@ -57,7 +57,4 @@ def get_assemble_parameters(module_dict):
             list(module_dict.values())[it].parameter()['relate_finance_index']
         para['equation'][list(module_dict.keys())[it]] = module_list[it].equation
     return para
-
-
-
 #=

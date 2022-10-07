@@ -85,6 +85,7 @@ class anomaly(object):
         para_dict = {x: df_para.T.to_dict()[x]['value'] for x in df_para.T.to_dict().keys()}
         return para_dict
     def para_dict_retype(self, para_dict):
+        print('para_dict:',para_dict)
         para_dict['anomaly_list'] = eval(para_dict['anomaly_list'])
         return para_dict
 #
