@@ -39,11 +39,11 @@ class anomaly_performance_filter_trddays(object):
         df1 = df.copy()
         date_max = df1['month'].max()
         date_min = df1['month'].min()
-        if para['start_date'] > date_max or para['end_date'] < date_min:
+        if para['start_month'] > date_max or para['end_month'] < date_min:
             raise Exception('please reset the date range for regression ')
         else:
-            df1 = df1[(df1['month'] >= para['start_date']) &
-                      (df1['month'] <= para['end_date'])].reset_index(drop=True)
+            df1 = df1[(df1['month'] >= para['start_month']) &
+                      (df1['month'] <= para['end_month'])].reset_index(drop=True)
         return df1
 class anomaly_performance_regression(object):
     def capm_OLS(self, table, para):

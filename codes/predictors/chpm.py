@@ -1,13 +1,21 @@
 # chpm: Change in income before extraordinary items scaled by scales.
-#
 # 'C001001000': Cash Received from Sales of Goods or Rendering of Services
 # 'B001400000': Non-operating Income
-def parameter():
-    para = {}
-    para['predictor'] = 'chpm'
-    para['relate_finance_index'] = ['B001400000','C001001000']
-    return para
-def equation(df):
-    df = df.copy()
-    df['chpm'] = df['B001400000'].diff() / df['C001001000']
-    return df
+#
+import numpy as np
+def equation(x):
+    x['chpm'] = (x['B001400000'] / x['C001001000']).diff(periods=3)
+    return x
+#
+def fill_0(x):
+    x.replace([0,], np.nan, inplace = True)
+    x.fillna(method='ffill', inplace=True)
+    return x
+#
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month', 'B001400000','C001001000']]
+    df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
+    df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'chpm']]
+    return df_output

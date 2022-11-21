@@ -19,8 +19,9 @@ def get_yearly_trddays(df,period=12,comm_trdday=20):
     # 去掉 'trdday_lastyr_', 'trdday_cumsum_', 'merged' 列
     df = df.drop(columns=['trdday_lastyr_', 'trdday_cumsum_', 'merged'])
     print('spending time of get yearly traddays:', time.time() - t0)
-    if np.array(list(df['trdday_lastyr'])).max() > 260:
-        raise Exception("trdday_lastyr > 260")
+    if np.array(list(df['trdday_lastyr'])).max() > 290:
+        print(df['trdday_lastyr'].max())
+        raise Exception("trdday_lastyr > 290")
     return df
 #
 def filter_30(x, var):
@@ -53,11 +54,12 @@ class  df_preprocessing(object):
         self.df = self.df_date()
         self.df = self.df_size(df=self.df)
         self.df = get_yearly_trddays(self.df,
-                                     comm_trdday=self.para['mnt_comm_trdday'],
-                                     period=self.para['yearly_mnt_period']) # 得到年度交易日数量
+                                     comm_trdday= 21,
+                                     period= 12) # 得到年度交易日数量
         self.df['trdday_lastmon'] = self.df['trdday']  # 得到月度交易日数量
         #
-        df = self.df.dropna()
+        #df = self.df.dropna()
+        df = self.df
         #
         return df
 #
@@ -93,7 +95,7 @@ class df_process_filter_size(object):
         df = df.copy()
         df = df.groupby('month').apply(filter_bottom_size,
                                        var='size',
-                                       percentage=para['exclude_bottom_size']).reset_index(drop=True)
+                                       percentage=para['filter_exclude_bottom_size']).reset_index(drop=True)
         df = df[df['filter_size'] == 'keep'].reset_index(drop=True)  # 得到了排除了市值大小在分位排序中大于30%的股票
         return df
 #
@@ -101,11 +103,11 @@ class df_process_filter_trddays(object):
     # Exclude stocks with trade days of last month/year less than 10/120 days
     def df_exclude_trddays_last_year_and_mnt(self, df, para):
         df1 = df.copy()
-        df1 = df1[(df1['trdday_lastyr'] >= para['exclude_trdday_lsyr']) &
-                  (df1['trdday_lastmon'] >= para['exclude_trdday_lsmnt'])].reset_index(drop=True)
+        df1 = df1[(df1['trdday_lastyr'] >= para['filter_exclude_trdday_lsyr']) &
+                  (df1['trdday_lastmon'] >= para['filter_exclude_trdday_lsmnt'])].reset_index(drop=True)
         return df1
     def df_exclude_begin_trddays(self,df,para):
         #
         df1 = df.copy()
-        df1 = df1[df1['month'] > para['exclude_begin_trdday']].reset_index(drop=True)
+        df1 = df1[df1['month'] > para['filter_exclude_begin_trdday']].reset_index(drop=True)
         return df1

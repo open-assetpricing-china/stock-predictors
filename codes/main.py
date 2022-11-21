@@ -1,29 +1,23 @@
-from codes.utils.assemble_factory import build_data
-from codes.utils.assemble_factory import calculate_predictors, load_trading_scheme, update_predictors
-from codes.utils.assemble_factory import update_portfolio_ret
-from codes.utils.assemble_factory import update_portfolio_performance
-from codes.utils.assemble_factory import update_portfolio_rolling_performance
+import sys
+from os.path import dirname, abspath
+path = dirname(dirname(abspath(__file__))) # back to folder 'OSAP' need back two steps
+sys.path.append(path)
+#print('sys.path:', str(sys.path))
+from codes.utils.assemble_factory import read_parameters, download_data, build_data
+from codes.utils.assemble_factory import calculate_predictors, predictors_wash, factors_model
+from codes.utils.assemble_factory import predictors_to_portfolios
+from codes.utils.assemble_factory import portfolios_risk_adjust
+from codes.utils.assemble_factory import portfolios_risk_adjust_rolling
 #
 if __name__ == '__main__':
     #
-    build_data(para_flag_path = '../data/para_file/para_flag.csv') # merging csmar_trade data and csmar_finance data to form a large panel data
-    #running build_csmar_basic() cost: 289s
-    calculate_predictors(predictor_file_path = './predictors/',
-                         para_flag_path = '../data/para_file/para_flag.csv')
-    #
-    update_predictors() # post-process of predictors, including: scaling to (-1,1)
-    #
-    df = load_trading_scheme(para_path='../data/para_file/para_trading_scheme.csv',
-                             df_path='../output/predictors/predictors.csv')
-    update_portfolio_ret(para_path='../data/para_file/para_construct_portfolio.csv', df=df) # long short raw return
-    #
-    # get the regression performance of portfolio_ret
-    path_portfolio = '../output/portfolio_ret/portfolio_ret.csv'
-    path_factor = '../output/factor_model/factor_model.csv'
-    path_para_portfolio_performance = '../data/para_file/para_portfolio_performance.csv'
-    #
-    update_portfolio_performance(path_anomaly=path_portfolio, path_factor=path_factor,
-                               path_para = path_para_portfolio_performance)
-    #
-    update_portfolio_rolling_performance(path_anomaly=path_portfolio,path_factor=path_factor,
-                                       path_para = path_para_portfolio_performance)
+    parameter = read_parameters() # reading input parameters
+    download_data(parameter=parameter) # downloading raw data
+    build_data(parameter=parameter) # raw data -> monthly data, weekly data, daily data
+    calculate_predictors(parameter=parameter) # calculate predictors
+    predictors_wash(parameter=parameter) # wash predictors
+    predictors_to_portfolios(parameter=parameter) # obtain portfolio raw return
+    factors_model(parameter=parameter) # construct factors model
+    portfolios_risk_adjust(parameter=parameter) # get the regression performance of portfolio raw return
+    portfolios_risk_adjust_rolling(parameter=parameter) # get the rolling regression performance of portfolio raw return
+

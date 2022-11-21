@@ -2,7 +2,7 @@
 # F_SCORE = F_ROA + F_ΔROA + F_CFO + F_ACCRUAL +
 #           F_ΔMARGIN + F_ΔTURN + F_ΔLEVER + F_ΔLIQUID + EQ_OFFER
 # =====================================================================
-# ROA = Net Income / Total Assets
+# ROA = Net Income / Total Assets  (也可以用 Net Profit / Total Asset 来代替)
 # Net income (NI), also called net earnings,
 # is calculated as sales minus cost of goods sold, selling, general
 # and administrative expenses, operating expenses, depreciation, interest,
@@ -21,7 +21,12 @@
 # 'B001211000' : Financial Expenses
 # 'B0F1213000' : Cost of Other Operations
 # 'B001500000' : Non-operating Expenses
+# *********************************************
+# 值得注意的是 在财报columns 中没有找到这几列：'B0D1104501', 'B0I1203101', 'B0F1208000', 'B0F1213000',
+# (也可以用 Net Profit / Total Asset 来代替)
+# Net Profit: 'B002000000 : Net profit ==> 净利润
 # ROA > 0  F_ROA = 1   ROA < 0  F_ROA = 0
+# 'A001000000' : Total Assets
 #=========================================================
 # CFO : cash flow from operation / beginning of the year total assets
 # 'D000100000' : Net Cash Flow from Operating Activities
@@ -76,45 +81,56 @@ def parameter():
     list_LIQUID = ['A002100000', 'A001100000']
     para['relate_finance_index'] = list_ROA + list_CFO + list_MARGIN + list_LEVER + list_LIQUID
     return para
-def equation(df):
-    df = df.copy()
-    df['ROA'] = (df['B001100000'] - df['B001209000'] - df['B001500000']
-                 - df['B0D1104501'] - df['B0I1203101'] - df['B0F1208000']
-                 - df['B001210000'] - df['B001211000'] - df['B0F1213000']
-                 - df['B001500000']) / df['A001000000']
-    df['F_ROA'] = df['ROA'].apply(lambda x: 1 if x>0 else 0)
+def equation(x):
+    #df['ROA'] = (df['B001100000'] - df['B001209000'] - df['B001500000']
+    #             - df['B0D1104501'] - df['B0I1203101'] - df['B0F1208000']
+    #             - df['B001210000'] - df['B001211000'] - df['B0F1213000']
+    #             - df['B001500000']) / df['A001000000']
+    x['ROA'] = x['B002000000'] / x['A001000000']
+    x['F_ROA'] = x['ROA'].apply(lambda x: 1 if x>0 else 0)
     #
-    df['Delta_ROA'] = df['ROA'].diff()
-    df['F_Delta_ROA'] = df['Delta_ROA'].apply(lambda x: 1 if x>0 else 0)
+    x['Delta_ROA'] = x['ROA'].diff(periods=3)
+    x['F_Delta_ROA'] = x['Delta_ROA'].apply(lambda x: 1 if x>0 else 0)
     #
-    df['CFO'] = df['D000100000'] / df['A001000000'].shift(12)
-    df['F_CFO'] = df['CFO'].apply(lambda x: 1 if x>0 else 0)
+    x['CFO'] = x['D000100000'] / x['A001000000'].shift(12)
+    x['F_CFO'] = x['CFO'].apply(lambda x: 1 if x>0 else 0)
     #
-    df['Diff_CFO_ROA'] = df['CFO'] - df['ROA']
-    df['F_ACCRUAL'] =  df['Diff_CFO_ROA'].apply(lambda x: 1 if x>0 else 0)
+    x['Diff_CFO_ROA'] = x['CFO'] - x['ROA']
+    x['F_ACCRUAL'] =  x['Diff_CFO_ROA'].apply(lambda x: 1 if x>0 else 0)
     #
-    df['MARGIN'] = df['B001000000'] / df['C001001000']
-    df['Delta_MARGIN'] = df['MARGIN'].diff()
-    df['F_Delta_MARGIN'] = df['Delta_MARGIN'].apply(lambda x: 1 if x>0 else 0)
+    x['MARGIN'] = x['B001000000'] / x['C001001000']
+    x['Delta_MARGIN'] = x['MARGIN'].diff(periods=3)
+    x['F_Delta_MARGIN'] = x['Delta_MARGIN'].apply(lambda x: 1 if x>0 else 0)
     #
-    df['TURN'] = df['C001001000'] / df['A001000000'].shift(12)
-    df['Delta_TURN'] = df['TURN'].diff()
-    df['F_Delta_TURN'] = df['Delta_TURN'].apply(lambda x : 1 if x>0 else 0)
+    x['TURN'] = x['C001001000'] / x['A001000000'].shift(12)
+    x['Delta_TURN'] = x['TURN'].diff(periods=3)
+    x['F_Delta_TURN'] = x['Delta_TURN'].apply(lambda x : 1 if x>0 else 0)
     #
-    df['LEVER'] = df['A001206000'] / df['A001000000']
-    df['Delta_LEVER'] = df['LEVER'].diff()
-    df['F_Delta_LEVER'] = df['Delta_LEVER'].apply(lambda x: 1 if x<0 else 0)
+    x['LEVER'] = x['A001206000'] / x['A001000000']
+    x['Delta_LEVER'] = x['LEVER'].diff(periods=3)
+    x['F_Delta_LEVER'] = x['Delta_LEVER'].apply(lambda x: 1 if x<0 else 0)
     #
-    df['LIQUID'] = df['A002100000'] / df['A001100000']
-    df['Delta_LIQUID'] = df['LIQUID'].diff()
-    df['F_Delta_LIQUID'] = df['Delta_LIQUID'].apply(lambda x:1 if x>0 else 0)
+    x['LIQUID'] = x['A002100000'] / x['A001100000']
+    x['Delta_LIQUID'] = x['LIQUID'].diff(periods=3)
+    x['F_Delta_LIQUID'] = x['Delta_LIQUID'].apply(lambda x:1 if x>0 else 0)
     #
-    df['ps'] = df['F_ROA'] + df['F_Delta_ROA'] + df['F_CFO'] + df['F_ACCRUAL'] + \
-               df['F_Delta_MARGIN'] + df['F_Delta_TURN'] + df['F_Delta_LEVER'] + \
-               df['F_Delta_LIQUID']
-    drop_columns = ['ROA', 'F_ROA', 'Delta_ROA', 'F_Delta_ROA', 'CFO', 'F_CFO',
-                    'Diff_CFO_ROA', 'F_ACCRUAL', 'MARGIN', 'Delta_MARGIN',
-                    'F_Delta_MARGIN', 'TURN', 'Delta_TURN', 'F_Delta_TURN',
-                    'LEVER','Delta_LEVER','F_Delta_LEVER','LIQUID','Delta_LIQUID''F_Delta_LIQUID']
-    df.drop(columns=drop_columns, inplace=True)
-    return df
+    x['ps'] = x['F_ROA'] + x['F_Delta_ROA'] + x['F_CFO'] + x['F_ACCRUAL'] + \
+               x['F_Delta_MARGIN'] + x['F_Delta_TURN'] + x['F_Delta_LEVER'] + \
+               x['F_Delta_LIQUID']
+
+    #drop_columns = ['ROA', 'F_ROA', 'Delta_ROA', 'F_Delta_ROA', 'CFO', 'F_CFO',
+    #                'Diff_CFO_ROA', 'F_ACCRUAL', 'MARGIN', 'Delta_MARGIN',
+    #                'F_Delta_MARGIN', 'TURN', 'Delta_TURN', 'F_Delta_TURN',
+    #                'LEVER','Delta_LEVER','F_Delta_LEVER','LIQUID','Delta_LIQUID''F_Delta_LIQUID']
+    #df.drop(columns=drop_columns, inplace=True)
+    return x
+
+def calculation(df_input):
+    df_output = df_input['monthly'][['stkcd', 'month','A001000000', 'B001100000','B001209000',
+                                     'B001500000', 'B002000000',
+                                     'B001210000', 'B001211000', 'B001500000',
+                                     'D000100000', 'B001000000', 'C001001000',
+                                     'A001206000', 'A002100000', 'A001100000',]]
+    df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'ps']]
+    return df_output

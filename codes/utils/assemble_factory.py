@@ -1,257 +1,367 @@
 import time
 import pandas as pd
-from codes.utils.csmar_update import assemble_predictors, get_assemble_parameters
+from codes.utils.csmar_update import assemble_predictors, assemble_output_predictors
+from codes.utils.csmar_update import assemble_standard_predictors, assemble_csv_file_info
 from codes.utils import csmar_process
+from codes.utils import csmar_consolidation
 from codes.utils import data_expert_module as data_expert
 from codes.utils import parameters_module as param
+from codes.utils.basic_data import DataForPredictors
+import codes.utils.make_model as make_model
+import wrds
 #
-def update_predictor_parameters(predictors):
-    # 在 para_construct_portfolio.csv 中 添加 成功生成的 predictors
-    para_anomaly = pd.read_csv('../data/para_file/para_construct_portfolio.csv')
-    para_anomaly = param.anomaly().dataframe_to_dict(df_para=para_anomaly)
-    para_anomaly['anomaly_list'] = predictors
-    df_para = param.anomaly().dict_to_dataframe(para_anomaly)
-    df_para.to_csv('../data/para_file/para_construct_portfolio.csv')
-    return
+def read_parameters():
+    para_class = param.parameters()
+    return para_class
 #
-def calculate_predictors(predictor_file_path,para_flag_path):
-    """Description:
-
-    Running this module is the step 2 for the whole algorithm.
-
-    This module is used to calculate predictors according to file './data/basic/basic_data.parquet',
-    and output the predictors in file './output/predictors/predictors.csv' .
-
-    Args:
-        predictor_file_path (str): the file path './codes/predictors/'
-        para_flag_path (str): the file path + file name of the input file i.e. './data/para_file/para_flag.csv'
-    Returns:
-        None
-    """
-    print('begin to calculate predictors and output file "basic_data.parquet" along folder ../data/basic/ ')
-    df_flag = pd.read_csv(para_flag_path)
-    flag_class = param.flag()
-    dict_flag = flag_class.dataframe_to_dict(df_para=df_flag)
-    if dict_flag['Is_calculate_predictors'] == 'yes':
-        print('begin to calculate predictors and output the file along: ../output/predictors/')
+def download_data(parameter):
+    para = parameter.data_download()
+    #
+    if para['Is_download_data'] == 'yes':
+        print('begin to download monthly trading data from wrds')
+        conn = wrds.Connection()
         t0 = time.time()
-        # 根据 ../codes/predictors/ 路径下 xxx.py 文件的个数和给出的 predictor 中的参数信息
-        # 来 update ../data/csmar/basic/ 路径下的 csmar_basic.parquet 文件和 csmar_basic_columns.csv 文件
-        assemble = assemble_predictors(path=predictor_file_path)
-        module_dict = assemble.predictors_info()
-        para_predictor = get_assemble_parameters(module_dict=module_dict)
+        csmar_t_mnth = conn.raw_sql(""" select a.* from csmar.csmar_t_mnth as a where a.Opndt >= '01/01/1959' """)
+        print('download <csmar_t_mnth> take time cost:', time.time() - t0)
+        csmar_t_mnth.to_parquet('../data/download_data/csmar_t_mnth.parquet')
         #
-        csmar_basic = pd.read_parquet('../data/basic/basic_data.parquet')
-        add_predictor = csmar_process.csmar_basic_add_predictor(df=csmar_basic, para=para_predictor)
-        df_all, predictors_list = add_predictor.add_predictor()
-        #
-        csmar_trade = csmar_process.csmar_trading()
-        basic_columns = list(csmar_trade.columns_rename.values())
-        df = df_all[basic_columns + predictors_list]  # select the columns include trade info and predictor info
-        df.to_csv('../output/predictors/predictors.csv')
-        # 同时将'../data/para_file/para_anomaly.csv' 中的参数进行更新。
-        update_predictor_parameters(predictors=predictors_list)
-        print('Done! of calculating predictors with the time cost:', time.time() - t0)
-        return
-    elif dict_flag['Is_calculate_predictors'] == 'no':
-        print('you do NOT need to calculate predictors')
-        print('predictors.csv has been build along folder ../output/predictors/')
-        return
-    else:
-        raise Exception(' you input wrong parameters of "Is_calculate_predictors" in '
-                        'file ../data/para_file/para_flag.csv')
-
-#
-def update_predictors():
-    predictor_postprocess = csmar_process.csmar_basic_predictor_postprocess()
-    t0 = time.time()
-    predictor_postprocess.output_predictor()
-    print('Done! of update predictors with time cost:', time.time() - t0)
-    return
-#
-#
-def load_trading_scheme(para_path,df_path):
-    """Description:
-
-    Running this module is the step 3 for the whole algorithm.
-
-    This module is used to wash file './output/predictors/predictors.csv'
-    according to parameter file './data/para_file/para_trading_scheme.csv'.
-
-    Args:
-        para_path (str): the file path './data/para_file/para_trading_scheme.csv'
-        df_path (str): the file path + file name of the input file i.e. './output/predictors/predictors.csv'
-    Returns:
-        df (pandas.DataFrame)
-    """
-    print('load trading scheme to wash file : ../output/predictors/predictors.csv')
-    t0 = time.time()
-    # 根据 '../../data/para_file/para_csmar_basic.csv' 中的参数, 对 csmar_bsic 进行清洗
-    para_washing = pd.read_csv(para_path)
-    para_washing = param.csmar_basic().dataframe_to_dict(df_para=para_washing)
-    para_washing = param.csmar_basic().para_dict_retype(para_dict=para_washing)
-    #
-    df = pd.read_csv(df_path)
-    #
-    df_class = data_expert.expert_handle_df(para=para_washing, df=df)
-    df = df_class.handle_df()
-    print('Done! of washing with file the time cost', time.time() - t0)
-    return df
-#
-def update_portfolio_ret(para_path,df):
-    """Description:
-
-    Running this module is the step 4 for the whole algorithm.
-
-    This module is used to calculate the portfolio monthly long-short return, and output the
-    results in the file './output/portfolio_ret/para_trading_scheme.csv'.
-
-    Args:
-        para_path (str): the file path './data/para_file/para_construct_portfolio.csv'
-        df (pandas.DataFrame): df is the return of load_trading_scheme(para_path,df_path)
-    Returns:
-        portfolio_ret (pandas.DataFrame)
-    """
-    print('begin to update the file: ../output/portfolio_ret/portfolio_ret.csv')
-    t0 = time.time()
-    para = pd.read_csv(para_path)
-    para = param.anomaly().dataframe_to_dict(df_para=para)
-    para = param.anomaly().para_dict_retype(para_dict=para)
-    # 对 df 的 columns 进行简化
-    csmar_trade = csmar_process.csmar_trading()
-    basic_columns = list(csmar_trade.columns_rename.values())
-
-    df1 = df[basic_columns+para['anomaly_list']+['ret']] # 挑选出对计算 portfolio_ret 有用的 columns
-    anomaly_class = data_expert.expert_handle_anomalies(df=df1, para=para)
-    portfolio_ret = anomaly_class.handle_anomalies()
-    #
-    portfolio_ret.to_csv('../output/portfolio_ret/portfolio_ret.csv')
-    print('Done! of updating with the time cost:', time.time() - t0)
-    return portfolio_ret
-#
-#
-#
-def update_portfolio_performance(path_anomaly,path_factor,path_para):
-    """Description:
-
-    Running this module is the step 5 for the whole algorithm.
-
-    This module is used to calculate the regression results of portfolio long-short return.
-    In the process of regression, y is the portfolio long-short return calculated according to
-    the predictors, which is saved in the file './output/portfolio_ret/portfolio_ret.csv'.
-    Correspondingly, x in regression is the factor model, which is saved in the file
-    './output/factor_model/factor_model.csv'.
-
-    Args:
-        path_anomaly (str): the file path './output/portfolio_ret/portfolio_ret.csv'
-        path_factor (str): the file path './output/factor_model/factor_model.csv'
-        path_para (str): the file path './data/para_file/para_portfolio_performance.csv'
-    Returns:
-        anomaly_performance (pandas.DataFrame): the regression results of portfolio long-short return, which
-        is saved in the file './output/portfolio_performance/portfolio_performance.csv'.
-    """
-    print('begin to update the file: ../output/portfolio_performance/portfolio_performance.csv')
-    t0 = time.time()
-    anomaly_ret = pd.read_csv(path_anomaly)
-    factor_ret = pd.read_csv(path_factor)
-    para_anomaly = pd.read_csv(path_para)
-    para_anomaly = param.anomaly_performance().dataframe_to_dict(df_para=para_anomaly)
-    para_anomaly = param.anomaly_performance().para_dict_retype(para_dict=para_anomaly)
-    anomaly_performance_class = data_expert.expert_handle_anomaly_performance(df_anomaly=anomaly_ret,
-                                                                              df_factor=factor_ret,
-                                                                              para=para_anomaly)
-    anomaly_performance_class.anomaly_precanonicalize()
-    anomaly_performance_class.factor_precanonicalize()
-    anomaly_performance = anomaly_performance_class.handle_anomaly_performance() # 得出异象表现。
-    anomaly_performance.to_csv('../output/portfolio_performance/portfolio_performance.csv')
-    print('Done! of updating with the time cost:', time.time() - t0)
-    return anomaly_performance
-#
-#
-def update_portfolio_rolling_performance(path_anomaly,path_factor,path_para):
-    """Description:
-
-    Running this module is the step 6 for the whole algorithm.
-
-    This module is used to calculate the rolling performance of the regression results of
-    portfolio long-short return. In the rolling process of regression, y is the portfolio long-short
-    return calculated according to the predictors, which is saved in the file
-    './output/portfolio_ret/portfolio_ret.csv'. Correspondingly, x in regression is the factor model,
-    which is saved in the file './output/factor_model/factor_model.csv'.
-
-    This module output the results of the rolling performance of the regression in the
-    file './output/portfolio_performance/rolling_performance_predictor.csv'
-
-    Args:
-        path_anomaly (str): the file path './output/portfolio_ret/portfolio_ret.csv'
-        path_factor (str): the file path './output/factor_model/factor_model.csv'
-        path_para (str): the file path './data/para_file/para_portfolio_performance.csv'
-    Returns:
-        None
-    """
-    print('begin the updating the rolling performance of predictors')
-    t0 = time.time()
-    anomaly_ret = pd.read_csv(path_anomaly)
-    factor_ret = pd.read_csv(path_factor)
-    para_anomaly = pd.read_csv(path_para)
-    para_anomaly = param.anomaly_performance().dataframe_to_dict(df_para=para_anomaly)
-    para_anomaly = param.anomaly_performance().para_dict_retype(para_dict=para_anomaly)
-    anomaly_performance_class = data_expert.expert_handle_anomaly_performance(df_anomaly=anomaly_ret,
-                                                                              df_factor=factor_ret,
-                                                                              para=para_anomaly)
-    #
-    anomaly_performance_class.anomaly_precanonicalize()
-    anomaly_performance_class.factor_precanonicalize()
-    anomaly_performance_rolling = anomaly_performance_class.handle_anomaly_performance_rolling()
-    #
-    for it in list(anomaly_performance_rolling.keys()):
-        file_name = 'rolling_performance_' + it + '.csv'
-        df = anomaly_performance_rolling[it]
-        df.to_csv('../output/portfolio_performance/' + file_name )
-    print('Done! of updating with the time cost:', time.time() - t0)
-    return
-#========================================================================
-#
-def build_data(para_flag_path):
-    """Description:
-
-    Running this module is the step 1 for the whole algorithm.
-
-    This module is used to create a large panel data file i.e. 'basic_data.parquet' and along folder './data/basic/'.
-
-    Args:
-        para_flag_path (str): the file path + file name of the input file i.e. 'para_flag.csv' along folder './data/para_file/'
-    Returns:
-        None
-    """
-    print('begin to build data and output file "basic_data.parquet" along folder ../data/basic/ ')
-    df_flag = pd.read_csv(para_flag_path)
-    flag_class = param.flag()
-    dict_flag = flag_class.dataframe_to_dict(df_para=df_flag)
-    if dict_flag['Is_build_data'] == 'yes':
-        print('begin the merging of trade data and finance data to form a large panel data')
+        print('begin to download weekly trading data from wrds')
         t0 = time.time()
-        # 将 raw csmar_trade 和 raw csmar_finance 并起来，形成一个大的panel data.
-        csmar_trade = csmar_process.csmar_trading()
-        df_trade = csmar_trade.output_trading_data()
-        # 得到 csmar_finance data
-        csmar_finance = csmar_process.csmar_finance_raw()
-        df_finance = csmar_finance.output_finance_data()
-        # 对 csmar_finance data 进行处理
-        t1 = time.time()
-        fin_post = csmar_process.csmar_finance_postprocess_raw(df=df_finance)
-        df_fin = fin_post.output_finance_data()
-        print('Done! of postprocessing csmar_finance with time cost:', time.time() - t1)
-        # 通过 merge 的方法来 merge df_csmar_basic 和 df_fin 来更新 csmar_basic
-        data_merge = csmar_process.merge_csmar_basic_and_finance_data(df_basic=df_trade, df_fin=df_fin)
-        df_all = data_merge.merge()
-        df_all.to_parquet('../data/basic/basic_data.parquet')
-        print('Done! of merging with time cost:', time.time() - t0)
-        return
-    elif dict_flag['Is_build_data'] == 'no':
-        print('you do NOT need to build date through merging trade data and finance data')
-        return
+        csmar_t_week = conn.raw_sql(""" select a.* from csmar.csmar_t_week as a where a.Opndt >= '01/01/1959' """)
+        print('download <csmar_t_week> take time cost:', time.time() - t0)
+        csmar_t_week.to_parquet('../data/download_data/csmar_t_week.parquet')
+        #
+        print('begin to download daily trading data from wrds')
+        t0 = time.time()
+        csmar_t_dalyr = conn.raw_sql(""" select a.* from csmar.csmar_t_dalyr as a where a.Trddt >= '01/01/1959' """)
+        print('download <csmar_t_dalyr> take time cost:', time.time() - t0)
+        csmar_t_dalyr.to_parquet('../data/download_data/csmar_t_dalyr.parquet')
+        #
+        print('begin to download industry data from wrds')
+        t0 = time.time()
+        csmar_t_co = conn.raw_sql(""" select a.* from csmar.csmar_t_co as a where a.Listdt >= '01/01/1959' """)
+        print('download <csmar_t_co> take time cost:', time.time() - t0)
+        csmar_t_co.to_parquet('../data/download_data/csmar_t_co.parquet')
+        #
+        print('begin to download firm financial statement data from wrds')
+        t0 = time.time()
+        csmar_master = conn.raw_sql(""" select a.* from csmar.csmar_master as a where a.Accper >= '01/01/1959' """)
+        print('download <csmar_master> take time cost:', time.time() - t0)
+        csmar_master.to_parquet('../data/download_data/csmar_master.parquet')
+    elif para['Is_download_data'] == 'no':
+        print('Not need to download data from wrds')
     else:
-        raise Exception(' you input wrong parameters of "Is_build_data" in '
-                        'file ../data/para_file/para_flag.csv')
-
+        raise Exception('you input wrong parameters of "Is_download_data" in '
+                        'file <./parameter.xml>')
+    return
+#
+def build_data(parameter):
+    para = parameter.data_build()
+    #
+    if para['Is_build_monthly_data'] == 'yes':
+        print('begin to build data and output files along folder ../data/build_data/ ')
+        df_mnt_fin = csmar_consolidation.monthly_add_finance_data() # merge the finance accounting data
+        df_mnt_fin_ind = csmar_consolidation.monthly_add_industry_data(df=df_mnt_fin) # merge the industry date
+        df_mnt_fin_ind.to_parquet('../data/build_data/basic_monthly_data.parquet') # form the basic monthly data
+    elif para['Is_build_monthly_data'] == 'no':
+        print('NOT need to build monthly data through merging trade data and finance data')
+    else:
+        raise Exception(' you input wrong parameters of "Is_build_monthly_data" in '
+                        'file  <./parameter.xml>')
+    if para['Is_build_weekly_data'] == 'yes':
+        print('begin to build data and output file "basic_weekly_data.parquet" along folder ../data/build_data/ ')
+        df_week = csmar_consolidation.weekly_data()
+        df_week.to_parquet('../data/build_data/basic_weekly_data.parquet')
+    elif para['Is_build_weekly_data'] == 'no':
+        print('NOT need to build weekly data')
+    else:
+        raise Exception(' you input wrong parameters of "Is_build_weekly_data" in '
+                        'file  <./parameter.xml>')
+    if para['Is_build_daily_data'] == 'yes':
+        print('begin to build data and output file "basic_daily_data.parquet" along folder ../data/build_data/ ')
+        df_daily = csmar_consolidation.daily_data()
+        df_daily.to_parquet('../data/build_data/basic_daily_data.parquet')
+    elif para['Is_build_daily_data'] == 'no':
+        print('NOT need to build daily data')
+    else:
+        raise Exception(' you input wrong parameters of "Is_build_daily_data" in '
+                        'file <./parameter.xml>')
+    return
+#
+def calculate_predictors(parameter):
+    print('begin to calculate predictors and output the file along: ../output/predictors/')
+    # 根据 ../codes/predictors/ 路径下 xxx.py 文件的个数和给出的 predictor 中的参数信息
+    # 将 predictor 的结果输出到 '../output/predictors/' 路径下
+    para_class = parameter
+    para = para_class.run_id()
+    path = '../output/' + para['run_id'] + '/predictors/'
+    param.mkdir(path=path)
+    #
+    para_calculate = parameter.calculate_predictors()
+    predictor_file_path = para_calculate['predictor_file_path']
+    #
+    assemble = assemble_predictors(path=predictor_file_path)
+    module_dict = assemble.predictors_info()
+    print('total predictors:', list(module_dict.keys()))
+    assemble_output = assemble_output_predictors(para = para) #
+    exist_predictors = assemble_output.path_files_name()  #
+    print('successful realized predictors: \n', exist_predictors)
+    total_predictors = list(module_dict.keys())
+    predictors_list = list(set(total_predictors) - set(exist_predictors))
+    print('predictors need to calculate: \n', predictors_list)
+    if len(predictors_list) > 0:
+        df_input = {}
+        df_input['monthly'] = DataForPredictors().monthly()
+        df_input['weekly'] = DataForPredictors().weekly()
+        df_input['daily'] = DataForPredictors().daily()
+        for it in range(len(predictors_list)):
+            print('begin to calculate predictor:', predictors_list[it])
+            t0 = time.time()
+            print(module_dict[predictors_list[it]])
+            try:
+                dp = module_dict[predictors_list[it]].calculation(df_input)
+                print('Done! with time cost:', time.time() - t0)
+                p_name = predictors_list[it] + '.csv'
+                path = '../output/' + para['run_id'] + '/predictors/'
+                dp.to_csv(path + p_name)
+            except KeyError as e:
+                print('key error', e)
+                print('get predictor ' + predictors_list[it] + ' failed may due to wrong definition of predictors')
+    else:
+        print('Done! Not need to calculate predictors')
+    return
+def predictors_wash(parameter):
+    print('washing predictors files:')
+    para = parameter.run_id()
+    path = '../output/' + para['run_id'] + '/predictors_wash/'
+    param.mkdir(path=path)
+    predictors_file_path = '../output/' + para['run_id'] + '/predictors/'
+    file_info_1 = assemble_csv_file_info(path=predictors_file_path)
+    predictors_total = file_info_1.path_files_name()
+    predictors_list = list(predictors_total)
+    para_wash = parameter.data_wash()
+    if para_wash['Is_data_standard'] == 'yes':
+        t0 = time.time()
+        df_cell = {}
+        for it in range(len(predictors_list)):
+            print('begin to standardizing predictor:', predictors_list[it])
+            file_name = predictors_file_path + predictors_list[it] + '.csv'
+            df = pd.read_csv(file_name)
+            predictor = predictors_list[it]
+            predictors_postprocess = csmar_process.csmar_single_predictor_postprocess(df=df, predictor=predictor)
+            df_s = predictors_postprocess.output_predictor_()
+            df_cell[predictors_list[it]] = df_s
+        print('Done! of standardizing predictors with time cost:', time.time() - t0)
+    elif para_wash['Is_data_standard'] == 'no':
+        df_cell = {}
+        for it in range(len(predictors_list)):
+            file_name = predictors_file_path + predictors_list[it] + '.csv'
+            df = pd.read_csv(file_name)
+            df_cell[predictors_list[it]] = df
+    else:
+        raise Exception(' you input wrong parameters of "Is_data_standard" in '
+                        'file <./parameter.xml>')
+    #
+    if para_wash['Is_add_filters'] == 'yes':
+        t0 = time.time()
+        df0 = pd.read_parquet('../data/build_data/basic_monthly_data.parquet')
+        df0 = df0[['stkcd', 'month', 'mret', 'Msmvttl', 'Ndaytrd']]  #
+        df0.rename(columns={'Msmvttl': 'size', 'Ndaytrd': 'trdday'}, inplace=True)
+        df_class = data_expert.expert_wash_df(para=para_wash, df=df0)
+        df = df_class.wash_df_by_filter()
+        df.sort_values(by=['stkcd', 'month'], inplace=True)
+        df = df.copy()
+        df['stkcd'] = df['stkcd'].apply(lambda x: str(x))
+        for it in range(len(list(df_cell.keys()))):
+            predictor_name =  list(df_cell.keys())[it]
+            print('wash predictor using filters:', predictor_name)
+            file_name = predictors_file_path + predictor_name + '.csv'
+            df1 = pd.read_csv(file_name)
+            df1.sort_values(by=['stkcd', 'month'], inplace=True)
+            df1['stkcd'] = df1['stkcd'].apply(lambda x: str(x))
+            #df1['stkcd'] = df1['stkcd'].apply(lambda x: str(x).zfill(6))
+            df_f = pd.merge(df, df1, on=['stkcd', 'month'], how='left')
+            save_name = path + predictor_name + '.csv'
+            df_f.to_csv(save_name)
+        print('Done! of washing predictors files with the time cost', time.time() - t0)
+    elif para_wash['Is_add_filters'] == 'no':
+        t0 = time.time()
+        df0 = pd.read_parquet('../data/build_data/basic_monthly_data.parquet')
+        df0 = df0[['stkcd', 'month', 'mret', 'Msmvttl', 'Ndaytrd']]  #
+        df0.rename(columns={'Msmvttl': 'size', 'Ndaytrd': 'trdday'}, inplace=True)
+        df0.sort_values(by=['stkcd', 'month'], inplace=True)
+        df0 = df0.copy()
+        df0['stkcd'] = df0['stkcd'].apply(lambda x: str(x))
+        #
+        for it in range(len(list(df_cell.keys()))):
+            predictor_name =  list(df_cell.keys())[it]
+            print('wash predictor without filters:', predictor_name)
+            df1 = df_cell[predictor_name]
+            df1 = df1[['stkcd', 'month', predictor_name]]
+            df1.sort_values(by=['stkcd', 'month'], inplace=True)
+            df1 = df1.copy()
+            df1['stkcd'] = df1['stkcd'].apply(lambda x: str(x))
+            # df1['stkcd'] = df1['stkcd'].apply(lambda x: str(x).zfill(6))
+            df_merge = pd.merge(df0, df1, on=['stkcd', 'month'], how='left')
+            save_name = path + predictor_name + '.csv'
+            df_merge.to_csv(save_name)
+        print('Done! of washing predictors files with the time cost', time.time() - t0)
+    else:
+        raise Exception(' you input wrong parameters of "Is_add_filters" in '
+                        'file <./parameter.xml>')
+    return
+#
+def predictors_to_portfolios(parameter):
+    print('begin to construct portfolios')
+    para = parameter.run_id()
+    para_portfolio = parameter.portfolio_construct()
+    path = '../output/' + para['run_id'] + '/portfolio_ret/'
+    param.mkdir(path=path)
+    predictors_file_path = '../output/' + para['run_id'] + '/predictors_wash/'
+    #
+    file_info_1 = assemble_csv_file_info(path=predictors_file_path)
+    predictor_total = file_info_1.path_files_name()
+    file_info_2 = assemble_csv_file_info(path=path)
+    portfolio_exist = file_info_2.path_files_name()
+    #
+    predictor_list = list( set(predictor_total) - set(portfolio_exist) )
+    t0 = time.time()
+    if len(predictor_list) > 0:
+        for it in range(len(predictor_list)):
+            print('predictor_to_portfolio:', predictor_list[it])
+            file_name = predictors_file_path + predictor_list[it] + '.csv'
+            df1 = pd.read_csv(file_name)
+            df1['stkcd'] = df1['stkcd'].apply(lambda x: str(x).zfill(6))
+            df1['ret'] = df1['mret']
+            portfolio_class = data_expert.expert_construct_portfolio(df=df1, para=para_portfolio,
+                                                                     predictor=predictor_list[it])
+            raw_return = portfolio_class.construct_portfolio()
+            save_name = path + predictor_list[it] + '.csv'
+            raw_return.to_csv(save_name)
+        print('Done! of getting portfolio raw return with the time cost:', time.time() - t0)
+    else:
+        print('Done! All portfolios are already exist. Not need to calculate portfolio raw return ')
+    return
+#
+def factors_model(parameter):
+    print('begin to construct factors models')
+    para = parameter.run_id()
+    para_factor_model = parameter.factor_model()
+    path = '../output/' + para['run_id'] + '/factor_model/'
+    param.mkdir(path=path)
+    if para_factor_model['Is_construct_model'] == 'yes':
+        t0 = time.time()
+        df = pd.read_parquet('../data/build_data/basic_monthly_data.parquet')
+        para_factor_model['rf_path'] = '../data/risk_free_return/rf.xlsx'
+        para_factor_model['std_columns'] = ['month', 'mkt', 'smb', 'vmg']
+        para_factor_model['filter_exclude_bottom_size'] = 0.3  # excluding the percentage of smallest stocks
+        para_factor_model['filter_exclude_trdday_lsyr'] = 126  # 除掉股票年度交易日累积小于126天的交易记录
+        para_factor_model['filter_exclude_trdday_lsmnt'] = 15  # 除掉股票月度交易日小于15天的记录
+        para_factor_model['filter_exclude_begin_trdday'] = '1990-12'  # 除掉股票在 '1990-12' 月之前有交易的股票记录
+        df = make_model.washing_data(para=para_factor_model, df=df)
+        factor_ret = make_model.update_factor_model(para=para_factor_model, df=df)
+        filename = path + 'factor_model.csv'
+        factor_ret.to_csv(filename)
+        print('Done! of making factors model with time cost:', time.time() - t0)
+    elif para_factor_model['Is_construct_model'] == 'no':
+        print('Done! Not need to construct factor model')
+    else:
+        raise Exception(' you input wrong parameters of "Is_construct_model" in '
+                        'file <./parameter.xml>')
+    return
+#
+def portfolios_risk_adjust(parameter):
+    para = parameter.run_id()
+    para_portfolio_regression = parameter.portfolio_regression()
+    if para_portfolio_regression['Is_portfolio_regression'] == 'yes':
+        print('Calculate the regression performance of portfolios raw return using factor model')
+        path = '../output/' + para['run_id'] + '/portfolio_regression/'
+        param.mkdir(path=path)
+        portfolios_file_path = '../output/' + para['run_id'] + '/portfolio_ret/'
+        factor_model_file = '../output/' + para['run_id'] + '/factor_model/factor_model.csv'
+        df_factor_model = pd.read_csv(factor_model_file)
+        columns = list(df_factor_model.columns)
+        if 'Unnamed: 0' in columns:
+            df_factor_model.drop('Unnamed: 0', axis=1, inplace=True)
+        else:
+            df_factor_model = df_factor_model
+        #
+        files1 = assemble_csv_file_info(portfolios_file_path)
+        portfolios_total = files1.path_files_name()
+        files2 = assemble_csv_file_info(path=path)
+        portfolios_reged = files2.path_files_name()
+        #
+        portfolios_list = list(set(portfolios_total) - set(portfolios_reged))
+        t0 = time.time()
+        if len(portfolios_list) > 0:
+            for it in range(len(portfolios_list)):
+                print('portfolio:', portfolios_list[it], '|', 'factor model:',
+                      para_portfolio_regression['reg_model'])
+                file_name = portfolios_file_path + portfolios_list[it] + '.csv'
+                df_portfolio = pd.read_csv(file_name)
+                df_portfolio = df_portfolio[['month', portfolios_list[it]]]
+                para_portfolio_regression['anomaly'] = portfolios_list[it]
+                portfolio_regression = data_expert.expert_handle_portfolio_regression(
+                    df_portfolio=df_portfolio, df_factor=df_factor_model, para=para_portfolio_regression)
+                portfolio_reg_result = portfolio_regression.handle_portfolio_regression()
+                save_name = path + portfolios_list[it] + '.csv'
+                portfolio_reg_result.to_csv(save_name)
+            print('Done! of calculating regression of portfolio raw return '
+                  'with the time cost:', time.time() - t0)
+        else:
+            print('Done! All regressions of portfolios are already exist. '
+                  'Not need to calculate regression of portfolios ')
+    elif para_portfolio_regression['Is_portfolio_regression'] == 'no':
+        print('Not calculate regression of portfolios')
+    else:
+        raise Exception(' you input wrong parameters of "Is_portfolio_regression" in '
+                        'file <./parameter.xml>')
+    return
+#
+def portfolios_risk_adjust_rolling(parameter):
+    para = parameter.run_id()
+    para_portfolio_regression = parameter.portfolio_regression()
+    if para_portfolio_regression['Is_portfolio_regression_rolling'] == 'yes':
+        print('Calculate the  rolling regression performance of portfolios raw return using factor model')
+        path = '../output/' + para['run_id'] + '/portfolio_regression_rolling/'
+        param.mkdir(path=path)
+        portfolios_file_path = '../output/' + para['run_id'] + '/portfolio_ret/'
+        factor_model_file = '../output/' + para['run_id'] + '/factor_model/factor_model.csv'
+        df_factor_model = pd.read_csv(factor_model_file)
+        columns = list(df_factor_model.columns)
+        if 'Unnamed: 0' in columns:
+            df_factor_model.drop('Unnamed: 0', axis=1, inplace=True)
+        else:
+            df_factor_model = df_factor_model
+        #
+        files1 = assemble_csv_file_info(portfolios_file_path)
+        portfolios_total = files1.path_files_name()
+        files2 = assemble_csv_file_info(path=path)
+        portfolios_reged = files2.path_files_name()
+        portfolios_list = list(set(portfolios_total) - set(portfolios_reged))
+        t0 = time.time()
+        if len(portfolios_list) > 0:
+            for it in range(len(portfolios_list)):
+                print('portfolio:', portfolios_list[it], '|rolling|',
+                      'factor model:', para_portfolio_regression['reg_model'])
+                file_name = portfolios_file_path + portfolios_list[it] + '.csv'
+                df_portfolio = pd.read_csv(file_name)
+                df_portfolio = df_portfolio[['month', portfolios_list[it]]]
+                para_portfolio_regression['anomaly'] = portfolios_list[it]
+                #
+                portfolio_regression = data_expert.expert_handle_portfolio_regression(
+                    df_portfolio=df_portfolio, df_factor=df_factor_model, para=para_portfolio_regression)
+                portfolio_reg_result = portfolio_regression.handle_portfolio_regression_rolling()
+                save_name = path + portfolios_list[it] + '.csv'
+                portfolio_reg_result.to_csv(save_name)
+            print('Done! of calculating rolling regression of portfolio '
+                  'raw return with the time cost:', time.time() - t0)
+        else:
+            print('Done! All rolling regressions of portfolios are already exist. '
+                  'Not need to calculate rolling regression of portfolios ')
+    elif para_portfolio_regression['Is_portfolio_regression_rolling'] == 'no':
+        print('Not calculate rolling regression of portfolios')
+    else:
+        raise Exception(' you input wrong parameters of "Is_portfolio_regression_rolling" in '
+                        'file <./parameter.xml>')
+    return

@@ -3,13 +3,16 @@
 #  'A001123000' :  Net Inventories 净存货
 #  'A001212000' :  Net Fixed Assets
 #  'A001000000' :  Total Assets
-def parameter():
-    para = {}
-    para['predictor'] = 'invest'
-    para['relate_finance_index'] = ['A001123000', 'A001212000', 'A001000000']
-    return para
-def equation(df):
-    df = df.copy()
-    df['invest'] = (df['A001212000'].diff(periods=12) + df['A001123000'].diff(periods=12)
-                    ) / df['A001000000'].shift(12)
-    return df
+#
+def equation(x):
+    x['invest'] = (x['A001212000'].diff(periods=12) + x['A001123000'].diff(periods=12)
+                    ) / x['A001000000'].shift(12)
+    return x
+#
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month', 'A001123000', 'A001212000', 'A001000000']]
+    df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'invest']]
+    return df_output
+

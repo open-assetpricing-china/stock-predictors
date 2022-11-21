@@ -1,5 +1,94 @@
 '''::parameter::'''
 import pandas as pd
+import xml.etree.ElementTree as ET
+import os
+#
+class parameters(object):
+    def __init__(self):
+        self.para_input = ET.XML(open('./parameter.xml', 'r').read())
+    def run_id(self):
+        for it in self.para_input:
+            para = {}
+            if it.tag == 'run_id':
+                para['run_id'] = eval(it.text)
+                return para
+    def data_download(self):
+        for it in self.para_input:
+            if it.tag == 'data_download':
+                para_data_download = {}
+                for it1 in it:
+                    para_data_download[it1.tag] = eval(it1.text)
+                return para_data_download
+    def calculate_predictors(self):
+        for it in self.para_input:
+            if it.tag == 'calculate_predictors':
+                para_calculate_predictors = {}
+                for it1 in it:
+                    para_calculate_predictors[it1.tag] = eval(it1.text)
+                return para_calculate_predictors
+    def data_build(self):
+        for it in self.para_input:
+            if it.tag == 'data_build':
+                para_data_build = {}
+                for it1 in it:
+                    para_data_build[it1.tag] = eval(it1.text)
+                return para_data_build
+    def data_wash(self):
+        for it in self.para_input:
+            if it.tag == 'data_wash':
+                para_data_wash = {}
+                for it1 in it:
+                    para_data_wash[it1.tag] = eval(it1.text)
+                return para_data_wash
+    def portfolio_construct(self):
+        for it in self.para_input:
+            if it.tag == 'portfolio_construct':
+                para_portfolio_construct = {}
+                for it1 in it:
+                    para_portfolio_construct[it1.tag] = eval(it1.text)
+                return para_portfolio_construct
+    def factor_model(self):
+        for it in self.para_input:
+            if it.tag == 'factor_model':
+                para_factor_model = {}
+                for it1 in it:
+                    para_factor_model[it1.tag] = eval(it1.text)
+                return para_factor_model
+    def portfolio_regression(self):
+        for it in self.para_input:
+            if it.tag == 'portfolio_regression':
+                para_p_r = {}
+                for it1 in it:
+                    para_p_r[it1.tag] = eval(it1.text)
+                return para_p_r
+    def output(self):
+        para = {}
+        para['run_id'] = self.run_id()['run_id']
+        para['data_download'] = self.data_download()
+        para['data_build'] = self.data_build()
+        para['data_wash'] = self.data_wash()
+        para['portfolio_construct'] = self.portfolio_construct()
+        para['factor_model'] = self.factor_model()
+        para['portfolio_regression'] = self.portfolio_regression()
+        return para
+#
+def mkdir(path):
+    """
+       Create a folder at your path
+       :param path: the path of the folder you wish to create
+       :return: the path of folder being created
+       Notes: if the folder already exist, it will not create a new one.
+    """
+    path = path.strip()
+    path = path.rstrip("\\")
+    path_flag = os.path.exists(path)
+    if not path_flag:
+        os.makedirs(path)
+    return path_flag
+#
+#
+#
+#
 #
 class predictor(object):
     # 关于 predictor 参数的类
@@ -104,6 +193,22 @@ class anomaly_performance(object):
     def para_dict_retype(self, para_dict):
         para_dict['rolling_period'] = eval(para_dict['rolling_period'])  # 滚动计算的窗口宽度
         para_dict['anomaly_list'] = eval(para_dict['anomaly_list'])
+        return para_dict
+
+class anomaly_regression(object):
+    def default_para(self, para):
+        return para
+    def dict_to_dataframe(self, para):
+        df_para = pd.DataFrame(pd.Series(para))
+        df_para.rename(columns={0:'value'}, inplace=True)
+        df_para.index.set_names('key', inplace=True)
+        return df_para
+    def dataframe_to_dict(self, df_para):
+        df_para.set_index('key', inplace=True)
+        para_dict = {x: df_para.T.to_dict()[x]['value'] for x in df_para.T.to_dict().keys()}
+        return para_dict
+    def para_dict_retype(self, para_dict):
+        para_dict['rolling_period'] = eval(para_dict['rolling_period'])  # 滚动计算的窗口宽度
         return para_dict
 #
 class flag(object):

@@ -15,21 +15,21 @@
 # 'A001120000' : Net Dividends Receivable
 # 'A001121000' : Net Other Receivables
 #
-def parameter():
-    para = {}
-    para['predictor'] = 'pchsale_pchrect'
-    para['relate_finance_index'] = ['C001001000', 'A001110000', 'A001111000','A0I1113000',
-                                    'A0I1114000', 'A0I1115000','A0I1116000','A0I1116101',
-                                    'A0I1116201', 'A0I1116301','A0I1116401','A001119000',
-                                    'A001120000', 'A001121000' ]
-    return para
+def equation(x):
+    x['pchsale_pchrect'] = x['C001001000'].pct_change(periods=3) - (
+        x['A001110000'] + x['A001111000'] + x['A0I1113000']
+        + x['A0I1114000'] + x['A0I1115000'] + x['A0I1116000']
+        + x['A0I1116101'] + x['A0I1116201'] + x['A0I1116301']
+        + x['A0I1116401'] + x['A001119000'] + x['A001120000']
+        + x['A001121000']).pct_change(periods=3)
+    return x
+
 #
-def equation(df):
-    df = df.copy()
-    df['pchsale_pchrect'] = df['C001001000'].pct_change(periods=3) - (
-        df['A001110000'] + df['A001111000'] + df['A0I1113000']
-        + df['A0I1114000'] + df['A0I1115000'] + df['A0I1116000']
-        + df['A0I1116101'] + df['A0I1116201'] + df['A0I1116301']
-        + df['A0I1116401'] + df['A001119000'] + df['A001120000']
-        + df['A001121000']).pct_change(periods=3)
-    return df
+def calculation(df_input):
+    df_output = df_input['monthly'][['stkcd', 'month', 'C001001000', 'A001110000', 'A001111000',
+                                     'A0I1113000','A0I1114000', 'A0I1115000','A0I1116000',
+                                     'A0I1116101','A0I1116201', 'A0I1116301','A0I1116401',
+                                     'A001119000','A001120000', 'A001121000' ]]
+    df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'pchsale_pchrect' ]]
+    return df_output

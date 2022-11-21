@@ -5,12 +5,15 @@
 # 'A002203000': long term debt
 # 'A001000000': total assets
 # 'A001101000': cash and cash equivalents
-def parameter():
-    para = {}
-    para['predictor'] = 'cashspr'
-    para['relate_finance_index'] = ['size','A002203000', 'A001000000', 'A001101000']
-    return para
-def equation(df):
-    df = df.copy()
-    df['cashspr'] = (df['size'] + df['A002203000'] -df['A001000000']) / df['A001101000']
-    return df
+# 'Msmvttl' : size
+def equation(x):
+    x = x.copy()
+    x['cashspr'] = (x['Msmvttl'] + x['A002203000'] -x['A001000000']).shift() / x['A001101000'].shift()
+    return x
+#
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month','Msmvttl','A002203000', 'A001000000', 'A001101000' ]]
+    df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month','cashspr']]
+    return df_output

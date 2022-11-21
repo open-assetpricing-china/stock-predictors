@@ -1,13 +1,19 @@
 # pchdepr : Percentage change in depreciation
 # 'D000103000' : Depreciation of Fixed Assets, Oil and Gas Assets, and Bearer Biological Assets.
 #
-def parameter():
-    para = {}
-    para['predictor'] = 'pchdepr'
-    para['relate_finance_index'] = ['D000103000']
-    return para
+import numpy as np
+def equation(x):
+    x['pchdepr'] = x['D000103000'].pct_change(periods=3)
+    return x
 #
-def equation(df):
-    df = df.copy()
-    df['pchdepr'] = df['D000103000'].pct_change()
-    return df
+def fill_0(x):
+    x.replace([0,], np.nan, inplace = True)
+    x.fillna(method='ffill', inplace=True)
+    return x
+#
+def calculation(df_input):
+    df_output = df_input['monthly'][['stkcd', 'month', 'D000103000']]
+    df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
+    df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'pchdepr']]
+    return df_output

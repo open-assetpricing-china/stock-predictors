@@ -1,11 +1,14 @@
-#
 # Monthly percent change in shares outstanding
-def parameter():
-    para = {}
-    para['predictor'] = 'chcsho'
-    para['relate_finance_index'] = ['size','clsprc']
-    return para
-def equation(df):
-    df = df.copy()
-    df['chcsho'] = (df['size'] / df['clsprc']).pct_change()
-    return df
+#
+# 'Msmvttl' : 'size'
+def equation(x):
+    x = x.copy()
+    x['chcsho'] = (x['Msmvttl'] / x['Mclsprc']).pct_change()
+    return x
+#
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month', 'Msmvttl', 'Mclsprc']]
+    df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'chcsho']]
+    return df_output

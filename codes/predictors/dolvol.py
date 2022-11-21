@@ -1,13 +1,15 @@
 # dolvol : Natural logarithm of trading volume times price per share from month t-2
+# 'Mnvaltrd': 'mtrdvalue'
 #
 import numpy as np
-def parameter():
-    para = {}
-    para['predictor'] = 'dolvol'
-    para['relate_finance_index'] = ['mtrdvalue']
-    return para
-def equation(df):
-    df = df.copy()
-    df['dolvol'] = np.log(df['mtrdvalue']).shift(2)
-    return df
 #
+def equation(x):
+    x['dolvol'] = np.log(x['Mnvaltrd']).shift(2)
+    return x
+#
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month', 'Mnvaltrd']]
+    df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'dolvol']]
+    return df_output

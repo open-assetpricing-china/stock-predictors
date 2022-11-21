@@ -1,10 +1,9 @@
-#
-def parameter():
-    para = {}
-    para['predictor'] = 'cashdebt'
-    para['relate_finance_index'] = ['B002000000', 'A002000000'] # 'B002000000' : Net Profit
-    return para
-def equation(df):
-    df = df.copy()
-    df['cashdebt'] = df['B002000000'] / df['A002000000'] # df['A002000000'] -> Total Liabilities
-    return df
+# 'B002000000' : Net Profit
+# df['A002000000'] -> Total Liabilities
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month', 'B002000000','A002000000' ]]
+    df_output = df_output.copy()
+    df_output['cashdebt'] = (df_output['B002000000'] / df_output['A002000000']).shift()
+    df_output = df_output[['stkcd', 'month', 'cashdebt']]
+    return df_output

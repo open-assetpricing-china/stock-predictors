@@ -42,15 +42,22 @@ class factor_ret_group_by_factor_quantile(object):
     def ep_and_size(self,df,para):
         # you might change your parameter here  rename 'var1', 'var2' for each characteristic
         df1 = df.copy()
-        df1 = df1.groupby('month').apply(split_2, var='size').reset_index(drop=True)  # 对 size 进行2分组
+        df1 = df1.groupby('month').apply(split_2, var='size_factor').reset_index(drop=True)  # 对 size 进行2分组
         df1 = df1.groupby('month').apply(split_3, var='ep').reset_index(drop=True)  # 对 ep 进行 3 分组。
         # df2=df2.groupby(['month','group_size']).apply(split_3, var='ep').reset_index(drop=True) # 序贯分组
-        df1['portfolio_name'] = df1['group_size'] + '/' + df1['group_ep']  # 得到分组组合名称
+        df1['portfolio_name'] = df1['group_size_factor'] + '/' + df1['group_ep']  # 得到分组组合名称
         return df1
+#
+def get_size_valued_return(x, var = 'size'):
+   x1 = x.copy()
+   x1.dropna(subset=['ret', var], inplace=True)
+   ret = (x1['ret'] * x1['size']).sum() / x1['size'].sum()
+   return ret
+#
 class factor_ret_group_portfolio_ret(object):
     def portfolio_ret(self,df,):
         port_ret = df.groupby(['month', 'portfolio_name']).apply(
-            lambda x: (x['ret'] * x['size']).sum() / x['size'].sum())
+            lambda x: get_size_valued_return(x=x,var='size'))
         port_ret = port_ret.reset_index()
         port_ret.rename(columns={port_ret.columns[-1]: 'ret'}, inplace=True)
         ''' 得到 portfolio return 的透视图'''
@@ -73,14 +80,24 @@ class factor_ret_group_portfolio_ret(object):
         rf = rf.copy()
         rf['month'] = pd.to_datetime(rf['month'], format='%Y-%m-%d')
         rf.month = rf.month.dt.strftime('%Y-%m')
-        factor_ret = pd.merge(rf, factor_ret, left_on='month', right_on='month')
+        if len(rf) >= len(factor_ret):
+            rf_factor_ret = pd.merge(rf, factor_ret, on='month', how='left')
+        else:
+            rf_factor_ret = pd.merge(rf, factor_ret, on='month', how='right')
         df = df.sort_values(by=['month','stkcd'])
+        #
         mkt = df.groupby('month').apply(
-            lambda x: (x['mret'] * x['size']).sum() / x['size'].sum()).reset_index(drop=True)
-        factor_ret['mkt'] = mkt
-        factor_ret['mkt'] = factor_ret['mkt'] - factor_ret['rf']
-        factor_ret=factor_ret[['month','mkt','smb','vmg']]
-        return factor_ret
+            lambda x: (x['mret'] * x['size']).sum() / x['size'].sum()).reset_index()
+        mkt.rename(columns={mkt.columns[-1]: 'v_mret'}, inplace=True)
+        #
+        if len(rf_factor_ret) >= len(mkt):
+            mkt_rf_factor_ret = pd.merge(rf_factor_ret, mkt, on='month', how='left')
+        else:
+            mkt_rf_factor_ret = pd.merge(rf_factor_ret, mkt, on='month', how='right')
+        mkt_rf_factor_ret['mkt'] = mkt_rf_factor_ret['v_mret'].shift() - mkt_rf_factor_ret['rf'].shift()
+        mkt_rf_factor_ret = mkt_rf_factor_ret[['month','mkt','smb','vmg']]
+        return mkt_rf_factor_ret
+#
 class factor_ret_canonical_form(object):
     def __init__(self,factor_ret,para):
         self.factor_ret = factor_ret

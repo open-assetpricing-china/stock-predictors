@@ -1,13 +1,21 @@
-#
 # 'C001001000': Cash Received from Sales of Goods or Rendering of Services
 # 'A001000000': Total Assets
 #
-def parameter():
-    para = {}
-    para['predictor'] = 'chato'
-    para['relate_finance_index'] = ['C001001000','A001000000']
-    return para
-def equation(df):
-    df = df.copy()
-    df['chato'] = df['C001001000'].diff() / df['A001000000']
-    return df
+import numpy as np
+def equation(x):
+    x = x.copy()
+    x['chato'] = (x['C001001000'] / x['A001000000']).diff(periods=3)
+    return x
+#
+def fill_0(x):
+    x.replace([0,], np.nan, inplace = True)
+    x.fillna(method='ffill', inplace=True)
+    return x
+#
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month', 'C001001000','A001000000' ]]
+    df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
+    df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'chato']]
+    return df_output

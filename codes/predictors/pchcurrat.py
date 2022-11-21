@@ -2,13 +2,21 @@
 # current asset)
 # 'A001100000' : Total Assets
 # 'A002100000' : Total Liabilities
-def parameter():
-    para = {}
-    para['predictor'] = 'pchcurrat'
-    para['relate_finance_index'] = ['A002100000','A001100000']
-    return para
+import numpy as np
+def equation(x):
+    x['pchcurrat'] = (x['A002100000'] / x['A001100000']).pct_change(periods=3)
+    return x
 #
-def equation(df):
-    df = df.copy()
-    df['pchcurrat'] = (df['A002100000'] / df['A001100000']).pct_change()
-    return df
+def fill_0(x):
+    x.replace([0,], np.nan, inplace = True)
+    x.fillna(method='ffill', inplace=True)
+    return x
+#
+
+def calculation(df_input):
+    df_output = df_input['monthly'][['stkcd', 'month', 'A002100000','A001100000']]
+    df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
+    df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'pchcurrat']]
+    return df_output
+#

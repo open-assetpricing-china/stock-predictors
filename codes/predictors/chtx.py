@@ -1,12 +1,20 @@
 # chtx: Percent change in taxes from quarter t-1 to t.
 # 'A002113000' : Taxes Payable
 #
-def parameter():
-    para = {}
-    para['predictor'] = 'chtx'
-    para['relate_finance_index'] = ['A002113000']
-    return para
-def equation(df):
-    df = df.copy()
-    df['chtx'] = df['A002113000'].pct_change(periods=3)
-    return df
+import numpy as np
+def equation(x):
+    x['chtx'] = x['A002113000'].pct_change(periods=3)
+    return x
+#
+def fill_0(x):
+    x.replace([0,], np.nan, inplace = True)
+    x.fillna(method='ffill', inplace=True)
+    return x
+#
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month', 'A002113000']]
+    df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
+    df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'chtx']]
+    return df_output

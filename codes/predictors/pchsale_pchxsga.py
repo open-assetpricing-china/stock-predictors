@@ -2,16 +2,14 @@
 # percentage change in management expenses.
 # 'C001001000' : Cash Received from Sales of Goods or Rendering of Services
 # 'B0F1208000' : Business and Management Expenses
-def parameter():
-    para = {}
-    para['predictor'] = 'pchsale_pchxsga'
-    para['relate_finance_index'] = ['C001001000', 'B0F1208000' ]
-    return para
+#*******************************************************
+# 注意在 df_input['monthly'] 数据中找不到 'B0F1208000' 列
+def equation(x):
+    x['pchsale_pchxsga'] = x['C001001000'].pct_change(periods=3) - x['B0F1208000'].pct_change(periods=3)
+    return x
 #
-def equation(df):
-    df = df.copy()
-    df['pchsale_pchxsga'] = df['C001001000'].pct_change(periods=3) - df['B0F1208000'].pct_change(periods=3)
-    return df
-#
-#
-#
+def calculation(df_input):
+    df_output = df_input['monthly'][['stkcd', 'month', 'C001001000', 'B0F1208000']]
+    df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'pchsale_pchxsga']]
+    return  df_output

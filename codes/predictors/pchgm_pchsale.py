@@ -2,14 +2,21 @@
 # change in sales.
 # 'C001001000' : Cash Received from Sales of Goods or Rendering of Services
 # 'B001209000' : Selling Expenses
-def parameter():
-    para = {}
-    para['predictor'] = 'pchgm_pchsale'
-    para['relate_finance_index'] = ['C001001000', 'B001209000']
-    return para
 #
-def equation(df):
-    df = df.copy()
-    df['pchgm_pchsale'] = ((df['C001001000'] - df['B001209000']) / df['C001001000']
-                           ).pct_change() - df['C001001000'].pct_change()
-    return df
+import numpy as  np
+def equation(x):
+    x['pchgm_pchsale'] = ((x['C001001000'] - x['B001209000']) / x['C001001000']
+                           ).pct_change(periods=3) - x['C001001000'].pct_change(periods=3)
+    return x
+#
+def fill_0(x):
+    x.replace([0,], np.nan, inplace = True)
+    x.fillna(method='ffill', inplace=True)
+    return x
+#
+def calculation(df_input):
+    df_output = df_input['monthly'][['stkcd', 'month', 'C001001000', 'B001209000']]
+    df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
+    df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'pchgm_pchsale']]
+    return df_output

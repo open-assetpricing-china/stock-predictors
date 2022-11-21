@@ -1,12 +1,19 @@
 # egr: Quarterly percent change in book value of equity.
 # df['A001000000'] -> Total Asset
-def parameter():
-    para = {}
-    para['predictor'] = 'egr'
-    para['relate_finance_index'] = ['A001000000']
-    return para
-def equation(df):
-    df = df.copy()
-    df['egr'] = df['A001000000'].pct_change(periods=3)
-    return df
+import numpy as np
+def equation(x):
+    x['egr'] = x['A001000000'].pct_change(periods=3)
+    return x
 #
+def fill_0(x):
+    x.replace([0,], np.nan, inplace = True)
+    x.fillna(method='ffill', inplace=True)
+    return x
+#
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month', 'A001000000']]
+    df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
+    df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
+    df_output =  df_output[['stkcd', 'month', 'egr']]
+    return df_output

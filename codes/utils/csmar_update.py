@@ -4,7 +4,7 @@ import os
 from codes.utils import csmar_process
 #
 class assemble_predictors(object):
-    # 将 ../codes/predictors/ 路径下 xxx.py 文件信息进行组装,
+    # 将 ../codes/ana_predictors/ 路径下 xxx.py 文件信息进行组装,
     def __init__(self,path):
         self.path = path
     def path_files_name(self):
@@ -27,9 +27,47 @@ class assemble_predictors(object):
         module_dict = dict(zip(a, module_list))
         return module_dict
 #
+class assemble_output_predictors(object):
+    # 将 ../output/ana_predictors/ 路径下 xxx.csv 文件信息进行组装,
+    def __init__(self, para):
+        self.path = '../output/' + para['run_id'] + '/predictors/'
+    def path_files_name(self):
+        a = os.listdir(self.path)
+        try:
+            a.remove('__pycache__')
+        except:
+            a = a
+        a = [x[:-4] for x in a]
+        return a
+#
+class assemble_standard_predictors(object):
+    # 将 ../output/predictors_standard/ 路径下 xxx.csv 文件信息进行组装
+    def __init__(self):
+        self.path = '../output/predictors_standard/'
+    def path_files_name(self):
+        a = os.listdir(self.path)
+        try:
+            a.remove('__pycache__')
+        except:
+            a = a
+        a = [x[:-4] for x in a]
+        return a
+#
+class assemble_csv_file_info(object):
+    def __init__(self, path):
+        self.path = path
+    def path_files_name(self):
+        a = os.listdir(self.path)
+        try:
+            a.remove('_pycache__')
+        except:
+            a = a
+        a = [x[:-4] for x in a]
+        return a
+#
 class csmar_columns_process(object):
     # 将 ../data/csmar/basic/csmar_basic.parquet 的 columns 进行简化
-    # 只包含 csmar_trading 中的 columns 和 predictors
+    # 只包含 csmar_trading 中的 columns 和 ana_predictors
     def __init__(self):
         csmar_trade = csmar_process.csmar_trading()
         self.basic_columns = list(csmar_trade.columns_rename.values())
@@ -57,4 +95,9 @@ def get_assemble_parameters(module_dict):
             list(module_dict.values())[it].parameter()['relate_finance_index']
         para['equation'][list(module_dict.keys())[it]] = module_list[it].equation
     return para
-#=
+#======================================================================================
+if __name__ == '__main__':
+    output_p = assemble_output_predictors()
+    a = output_p.path_files_name()
+    print(a)
+

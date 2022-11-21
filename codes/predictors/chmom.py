@@ -1,11 +1,13 @@
 # chmom : Cumulative returns from months t - 6 to t - 1 minus months t - 12 to t - 7.
-def parameter():
-    para = {}
-    para['predictor'] = 'chmom'
-    para['relate_finance_index'] = ['clsprc']
-    return para
-def equation(df):
-    df = df.copy()
-    df['chmom'] = (df['clsprc'].shift(1) - df['clsprc'].shift(6)) / df[
-        'clsprc'].shift(6) - (df['clsprc'].shift(7) - df['clsprc'].shift(12)) / df['clsprc'].shift(12)
-    return df
+
+def equation(x):
+    x['chmom'] = (x['Mclsprc'].shift(1) - x['Mclsprc'].shift(6)) / x[
+        'Mclsprc'].shift(6) - (x['Mclsprc'].shift(7) - x['Mclsprc'].shift(12)) / x['Mclsprc'].shift(12)
+    return x
+
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month', 'Mclsprc']]
+    df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
+    df_output = df_output[['stkcd', 'month', 'chmom']]
+    return df_output

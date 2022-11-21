@@ -1,5 +1,5 @@
 # descripe the variables in csmar database
-#=========================================
+#================================================
 def csmar_t_mnth():
     para = dict()
     para['Stkcd'] = 'Stock code'
@@ -21,6 +21,62 @@ def csmar_t_mnth():
     para['Ahvaltrd_M'] = 'Monthly After-hours Trading Turnover (AHVALTRD_M)'  # 月度盘后交易额（AHVALTRD_M）
     para['CAPCHGDT_o'] = 'Share Outstanding Change Date (added by WRDS) (CAPCHGDT_O)'  # 未偿股份变更日期（由WRDS添加）（CAPCHGDT_O）
     return para
+#
+#
+def csmar_t_dalyr():
+    para = {}
+    para['Stkcd'] = 'stock code'
+    para['Trddt'] = 'Datetime' # 交易日期
+    para['Opnprc'] = '日开盘价' #
+    para['Hiprc'] = '日最高价'
+    para['Loprc'] = '日最低价'
+    para['Clsprc'] = '日收盘价'
+    para['Dnshrtrd'] = '日个股交易股数' # 流通股本
+    para['Dnvaltrd'] = '日个股交易金额' # 单位： 元
+    para['Dsmvosd'] = '日个股流通市值' # 单位： 千元
+    para['Dsmvtll'] = '日个股总市值' # 单位：千元
+    para['Dretwd'] = '考虑现金红利再投资的日个股回报率'
+    para['Dretnd'] = '不考虑现金红利的日个股回报率'
+    para['Adjprcwd'] = '考虑现金红利再投资的收盘价的可比价格'
+    para['Adjprcnd'] = '不考虑现金红利的收盘价的可比价格'
+    para['Markettype'] = '市场类型'
+    para['Capchgdt'] = '最新股本变动日期'
+    para['Trdsta'] = '交易状态'
+    para['Ahshrtrd_D'] = '日盘后成交总量' # 股数
+    para['Ahvaltrd_D'] = '日盘后成交总额' # 元
+    para['PreClosePrice'] = '昨收盘(交易所)' # 元/股
+    para['ChangeRatio'] = '涨跌幅'
+    return
+#
+#
+def csmar_t_week():
+    para = {}
+    para['Stkcd'] = '证券代码'
+    para['Trdwnt'] = '交易周'
+    para['Opndt'] = '周开盘日期'
+    para['Wopnprc'] = '周开盘价'
+    para['Clsdt'] = '周收盘日期'
+    para['Wclsprc'] = '周收盘价'
+    para['Wnshrtrd'] = '周个股交易股数'
+    para['Wnvaltrd'] = '周个股交易金额'
+    para['Wsmvosd'] = '周个股流通市值'
+    para['Wsmvttl'] = '周个股总市值'
+    para['Ndaytrd'] = '周交易天数'
+    para['Wretwd'] = '考虑现金红利在投资的周个股回报率'
+    para['Wretnd'] = '不考虑现金红利再投资的周个股回报率'
+    para['Markettype'] = '市场类型'
+    para['Capchgdt'] = '最新股本变动日期'
+    para['Ahshrtrd_W'] = '周盘后成交总量'
+    para['Ahvaltrd_W'] = '周盘后成交总额'
+
+    return
+
+#
+def csmar_t_co():
+    para = {}
+
+    return
+#
 #
 def csmar_t_mnth_rename():
     std_columns = ['Stkcd', 'Trdmnt', 'Opndt', 'Mopnprc', 'Clsdt', 'Mclsprc', 'Msmvttl', 'Ndaytrd', 'Mretwd']

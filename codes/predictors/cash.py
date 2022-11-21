@@ -1,10 +1,9 @@
-#
-def parameter():
-    para = {}
-    para['predictor'] = 'cash'
-    para['relate_finance_index'] = ['A001000000', 'A001101000'] # 'A001101000' : cash and cash equivalents
-    return para
-def equation(df):
-    df = df.copy()
-    df['cash'] = df['A001101000'] / df['A001000000'] # df['A001000000'] -> Total Asset
-    return df
+# 'A001101000' : cash and cash equivalents
+# df['A001000000'] -> Total Asset
+def calculation(df_input):
+    df = df_input['monthly']
+    df_output = df[['stkcd', 'month', 'A001101000', 'A001000000']]
+    df_output = df_output.copy()
+    df_output['cash'] = (df_output['A001101000'] / df_output['A001000000']).shift()
+    df_output = df_output[['stkcd', 'month', 'cash']]
+    return df_output
