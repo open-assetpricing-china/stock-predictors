@@ -24,13 +24,12 @@
 > │  ├─build_data   
 > │  └─risk_free_return  
 > └─output  
->    ├─test_1  
+>　├─test_1  
 >　　    ├─factor_model  
 >　　    ├─portfolio_regression  
 >　　    ├─portfolio_regression_rolling  
->　　    ├─portfolio_ret 
->
->　　    ├─predictors_wash    
+>　　    ├─portfolio_ret 　　    
+>　　├─predictors_wash    
 >　　    └─predictors  
 
 * Usage:
