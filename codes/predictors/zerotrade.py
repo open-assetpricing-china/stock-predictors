@@ -12,11 +12,17 @@ def month_days(x):
     else:
         return 28
 #
+def lag_one_month(x):
+    x = x.copy()
+    x['zerotrade'] = x['zerotrade'].shift()
+    return x
+#
 def calculation(df_input):
     df_output = df_input['monthly'][['stkcd', 'month', 'Mnvaltrd', 'Msmvosd', 'Ndaytrd']]
     df_output = df_output.copy()
     df_output['mnt_days'] = df_output['month'].apply(month_days)
     df_output['z_trd_day'] = df_output['mnt_days'] - df_output['Ndaytrd']
     df_output['turnover'] = df_output['Mnvaltrd'] / df_output['Msmvosd']
-    df_output['zerotrade'] = df_output['turnover'] * df_output['z_trd_day']
+    df_output['zerotrade'] = (df_output['turnover'] * df_output['z_trd_day'])
+    df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)
     return df_output[['stkcd', 'month', 'zerotrade']]

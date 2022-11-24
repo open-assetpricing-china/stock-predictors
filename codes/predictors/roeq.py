@@ -4,7 +4,7 @@
 #
 #
 def equation(x):
-    x['roeq'] = x['B006000000'] / x['A003000000']
+    x['roeq'] = (x['B006000000'] / x['A003000000']).shift()
     return x
 #
 def calculation(df_input):

@@ -12,6 +12,10 @@ def equation(x):
     else:
         return np.nan
 #
+def lag_one_month(x):
+    x = x.copy()
+    x['ill'] = x['ill'].shift()
+    return x
 def calculation(df_input):
     df_output = df_input['daily'][['stkcd', 'day','month', 'dret', 'Dnvaltrd']]
     df_output = df_output.copy()
@@ -20,4 +24,5 @@ def calculation(df_input):
     df_output = df_output.groupby(['stkcd', 'month']).apply(lambda x: equation(x)).reset_index()
     df_output.rename(columns={list(df_output.columns)[-1] : 'ill'}, inplace=True)
     df_output = df_output[['stkcd', 'month', 'ill']]
+    df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True) # lag one month
     return df_output

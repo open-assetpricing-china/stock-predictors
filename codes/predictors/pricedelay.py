@@ -21,6 +21,10 @@ def week_to_month(x):
     x.drop_duplicates(subset=['month'], keep='last', inplace=True, ignore_index=True)
     return x
 #
+def lag_one_month(x):
+    x = x.copy()
+    x['pricedelay'] = x['pricedelay'].shift()
+    return x
 def calculation(df_input):
     df = df_input['weekly']
     df_output = df[['stkcd', 'week', 'month', 'Wsmvttl','wret']]
@@ -34,4 +38,5 @@ def calculation(df_input):
     df_output = df_output.groupby('stkcd').apply(lambda x: regression(x=x, lag=4, periods=4*36)).reset_index(drop=True)
     df_output = df_output.groupby('stkcd').apply(lambda x: week_to_month(x)).reset_index(drop=True)
     df_output = df_output[['stkcd', 'week', 'month', 'pricedelay']]
+    df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)
     return df_output

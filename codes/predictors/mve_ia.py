@@ -3,7 +3,7 @@
 import numpy as np
 #
 def equation(x):
-    x['mve'] = np.log(x['Msmvttl']).shift(1)
+    x['mve'] = np.log(x['Msmvttl']).shift(1) # lag one month
     return x
 #
 def mean_value(x):

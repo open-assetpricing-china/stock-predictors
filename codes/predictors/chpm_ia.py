@@ -17,6 +17,11 @@ def fill_0(x):
     x.fillna(method='ffill', inplace=True)
     return x
 #
+def lag_one_month(x):
+    x = x.copy()
+    x['chpm_ia'] = x['chpm_ia'].shift()
+    return x
+#
 def calculation(df_input):
     df = df_input['monthly']
     df_output = df[['stkcd', 'month', 'B001400000','C001001000', 'ind_cd']]
@@ -25,4 +30,5 @@ def calculation(df_input):
     df_output['chpm_ia'] = df_output['chpm'] - df_output['chpm_ind_mean']
     df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
     df_output = df_output[['stkcd', 'month', 'chpm_ia']]
+    df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)
     return df_output

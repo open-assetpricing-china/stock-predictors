@@ -3,7 +3,7 @@
 # 'size'
 # 'Msmvttl' : size
 def equation(x):
-    x['sp'] = x['C001001000'] / x['Msmvttl']
+    x['sp'] = (x['C001001000'] / x['Msmvttl']).shift()
     return x
 #
 def calculation(df_input):

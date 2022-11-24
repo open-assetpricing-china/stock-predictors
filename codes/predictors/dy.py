@@ -2,7 +2,7 @@
 # 'A002115000' : Dividends Payable
 # 'Msmvttl': 'size'
 def equation(x):
-    x['dy'] = x['A002115000'] / x['Msmvttl']
+    x['dy'] = (x['A002115000'] / x['Msmvttl']).shift()
     return x
 #
 def calculation(df_input):

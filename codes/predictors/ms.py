@@ -66,6 +66,11 @@ def var(x):
     x['VARSGR'] = x['SGR'].rolling(48).var()
     return x
 #
+def lag_one_month(x):
+    x = x.copy()
+    x['ms'] = x['ms'].shift()
+    return x
+#
 def calculation(df_input):
     df = df_input['monthly']
     df_output = df[['stkcd', 'month','B002000000', 'A001000000', 'C001000000',
@@ -115,4 +120,5 @@ def calculation(df_input):
     df_output['ms'] = df_output['G1'] + df_output['G2'] + df_output['G3'] + df_output['G4'] + \
                       df_output['G5'] + df_output['G6'] + df_output['G7'] + df_output['G8']
     df_output = df_output[['stkcd', 'month', 'ms']]
+    df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)
     return df_output

@@ -7,7 +7,7 @@
 #
 def equation(x):
     x['tang'] = (x['A001101000'] + 0.715 * x['A001111000'] + 0.547 * x['A001123000'] + \
-                 0.535 * (x['A001212000'] / x['A001000000'])).shift()
+                 0.535 * (x['A001212000'] / x['A001000000'])).shift()  # lag one month
     return x
 #
 def calculation(df_input):

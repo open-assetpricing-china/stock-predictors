@@ -5,7 +5,7 @@
 def equation(x):
     x['trd_v'] = x['Mnshrtrd'].rolling(3).mean()
     x['trd_v_1'] = x['trd_v'].shift()
-    x['turn'] = x['trd_v_1'] / (x['Msmvttl'] / x['Mclsprc'])
+    x['turn'] = x['trd_v_1'] / (x['Msmvttl'] / x['Mclsprc']).shift()
     return x
 #
 def calculation(df_input):

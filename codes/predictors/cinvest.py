@@ -8,9 +8,15 @@ def equation(x):
             x['A001212000'] / x['C001001000']).rolling(9).mean().shift(3)
     return x
 #
+def lag_one_month(x):
+    x = x.copy()
+    x['cinvest'] = x['cinvest'].shift()
+    return x
+#
 def calculation(df_input):
     df = df_input['monthly']
     df_output= df[['stkcd', 'month', 'A001212000', 'C001001000']]
     df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
     df_output = df_output[['stkcd', 'month', 'cinvest']]
+    df_output = df_output.groupby('stkcd').apply(lambda x: lag_one_month(x)).reset_index(drop=True)
     return df_output

@@ -11,6 +11,12 @@
 def mean_value(x):
     x['pchcapx_ind'] = x['pchcapx'].mean()
     return x
+#
+def lag_one_month(x):
+    x = x.copy()
+    x['pchcapx_ia'] = x['pchcapx_ia'].shift()
+    return x
+#
 def calculation(df_input):
     df_output = df_input['monthly'][['stkcd', 'month', 'A001212000', 'A001218000',
                                      'A001222000','ind_cd']]
@@ -19,4 +25,5 @@ def calculation(df_input):
     df_output = df_output.groupby(['month', 'ind_cd']).apply(mean_value).reset_index(drop=True)
     df_output['pchcapx_ia'] = df_output['pchcapx'] - df_output['pchcapx_ind']
     df_output = df_output[['stkcd', 'month', 'pchcapx_ia']]
+    df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)
     return df_output

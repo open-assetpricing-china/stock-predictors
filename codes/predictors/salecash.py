@@ -4,7 +4,7 @@
 #
 
 def equation(x):
-    x['salecash'] = x['C001001000'] / x['A001101000']
+    x['salecash'] = (x['C001001000'] / x['A001101000']).shift() # lag one month
     return x
 
 def calculation(df_input):

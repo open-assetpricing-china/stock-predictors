@@ -11,11 +11,17 @@ def fill_0(x):
     x.replace([0,], np.nan, inplace = True)
     x.fillna(method='ffill', inplace=True)
     return x
-
+#
+def lag_one_month(x):
+    x = x.copy()
+    x['chinv'] = x['chinv'].shift()
+    return x
+#
 def calculation(df_input):
     df = df_input['monthly']
     df_output = df[['stkcd', 'month', 'A001123000','A001000000']]
     df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
     df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
     df_output = df_output[['stkcd', 'month', 'chinv']]
+    df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)
     return df_output
