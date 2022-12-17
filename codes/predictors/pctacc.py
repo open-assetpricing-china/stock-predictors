@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # Same as acc except that the numerator is divided by the absolute value
 # of net income if net income = 0 then net income set to 0.01 for
 # denominator.

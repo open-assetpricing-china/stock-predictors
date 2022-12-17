@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # pchsaleinv : Quarterly percentage change in sales-to-inventory.
 # D000113000 : Decrease of Inventories
 #

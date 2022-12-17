@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # mom12m: 11-month cumulative returns ending one month before month end.
 #
 def equation(x):

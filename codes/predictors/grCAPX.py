@@ -1,6 +1,9 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # grCAPX : Percent change in capital expenditures from year t-2 to year t.
 # 'C002006000' : Cash Paid to Acquire and Construct Fixed Assets, Intangible Assets and Other Long-term Assets
-#
 #
 def equation(df):
     df['grCAPX'] = df['C002006000'].pct_change(24)

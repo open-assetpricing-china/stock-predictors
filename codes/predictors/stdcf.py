@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # stdcf : Standard deviation for 16 quarters of net cash flows divided by sales.
 # 'C001001000': Cash Received from Sales of Goods or Rendering of Services
 #  'D000100000' : Net Cash Flow from Operating Activities

@@ -1,8 +1,12 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # Natural log of market capitalization at end of month t-1
 # 'Msmvttl': 'size'
 import numpy as np
 def equation(x):
-    x['mve'] = np.log(x['Msmvttl']).shift(1)
+    x['mve'] = np.log(x['Msmvttl']).shift(1) # lag one month
     return x
 #
 def calculation(df_input):

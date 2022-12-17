@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # orgcap: Capitalized management expenses.
 # This characteristic uses expense data acquired from CSMAR and is constructed
 # according to the definition in Eisfeldt and Papanikolaou (2013)

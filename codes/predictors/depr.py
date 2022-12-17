@@ -1,8 +1,10 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # Depreciation divided by fixed assets.
 # 'D000103000' : Depreciation of Fixed Assets, Oil and Gas Assets, and Bearer Biological Assets
 # 'A001212000' :  Net Fixed Assets
-#
-
 def equation(x):
     x['depr'] = (x['D000103000'] / x['A001212000']).shift()
     return x

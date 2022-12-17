@@ -1,3 +1,7 @@
+'''
+@Author: Yi Tian
+@Email: 12232985@mail.sustech.edu.cn
+'''
 #
 def equation(x):
     return x['dret'].std()

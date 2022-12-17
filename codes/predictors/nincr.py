@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # nincr: Number of consecutive quarters (up to eight quarters) with an
 # increase in earnings.
 # Net Profit : 'B002000000'

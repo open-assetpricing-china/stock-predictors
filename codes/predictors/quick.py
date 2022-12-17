@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # Quick ratio = (current assets - inventory) / current liabilities
 # 'A001100000' : Total Assets
 # 'A002100000' : Total Liabilities

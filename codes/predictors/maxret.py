@@ -1,6 +1,8 @@
-#
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # Maximum daily return from returns during month t-1.
-#
 def equation(x):
     return x['dret'].max()
 #

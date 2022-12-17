@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # std_turn : Monthly standard deviation of daily share turnover
 # ['Ahshrtrd_D'] = '日盘后成交总量'
 # ['Dnshrtrd'] = '日个股交易股数'

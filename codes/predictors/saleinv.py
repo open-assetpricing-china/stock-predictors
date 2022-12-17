@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # saleinv: Quarterly sales divided by total inventory
 # 'C001001000' : Cash Received from Sales of Goods or Rendering of Services
 # 'A001123000' : Net inventories

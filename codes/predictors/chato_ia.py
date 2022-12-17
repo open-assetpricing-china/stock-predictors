@@ -1,7 +1,9 @@
-#
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # 'C001001000': Cash Received from Sales of Goods or Rendering of Services
 # 'A001000000': Total Assets
-#
 import numpy as np
 def equation(x):
     x = x.copy()

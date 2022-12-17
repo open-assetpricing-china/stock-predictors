@@ -1,3 +1,7 @@
+'''
+@Author: Yi Tian
+@Email: 12232985@mail.sustech.edu.cn
+'''
 # rsup: Sales from quarter t minus sales from quarter t − 1 divided by quarter-end market capitalization.
 # Total Operating Revenue:df['B001100000']
 # 'Msmvttl' : size

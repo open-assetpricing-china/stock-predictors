@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # sp: Quarterly sales divided by quarter-end market capitalization
 # 'C001001000': Cash Received from Sales of Goods or Rendering of Services
 # 'size'

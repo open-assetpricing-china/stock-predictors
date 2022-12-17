@@ -1,4 +1,7 @@
-#
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # 'Msmvttl' : size
 def mean_value(x):
     x['bm_ind_mean'] = x['bm'].mean()

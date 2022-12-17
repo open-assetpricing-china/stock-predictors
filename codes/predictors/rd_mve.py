@@ -1,3 +1,7 @@
+'''
+@Author: Yi Tian
+@Email: 12232985@mail.sustech.edu.cn
+'''
 # rd mve: R&D expense divided by end-of-quarter market capitalization.
 # R&D expenses:df['A001219000']
 # 'Msmvttl' : size

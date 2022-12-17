@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # pchsale_pchxsga: Quarterly percentage change in sales minus quarterly
 # percentage change in management expenses.
 # 'C001001000' : Cash Received from Sales of Goods or Rendering of Services

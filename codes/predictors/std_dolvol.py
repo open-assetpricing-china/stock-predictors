@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # std_dolvol :
 # Monthly standard deviation of daily RMB trading volume
 # 'Ahshrtrd_D': 日盘后成交量

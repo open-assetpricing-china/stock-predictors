@@ -1,5 +1,8 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # pchcapx_ia : Industry adjusted percentage change in capital expenditure
-#
 #===========================================================================
 # 在企业的经营活动中，供长期使用的、其经济寿命将经历许多会计期间的资产如：
 # 固定资产、无形资产、递延资产等都要作为资本性支出。

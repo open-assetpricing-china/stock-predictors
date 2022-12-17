@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # salecash: Quarterly sales divided by cash and cash equivalents
 # 'C001001000' : Cash Received from Sales of Goods or Rendering of Services
 # 'A001101000' : cash and cash equivalents

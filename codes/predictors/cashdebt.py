@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # 'B002000000' : Net Profit
 # df['A002000000'] -> Total Liabilities
 def lag_one_month(x):

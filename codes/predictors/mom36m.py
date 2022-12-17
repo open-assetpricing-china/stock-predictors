@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # Cumulative returns from months t-36 to t-13
 #
 def equation(x):

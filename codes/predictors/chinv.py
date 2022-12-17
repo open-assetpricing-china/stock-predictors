@@ -1,7 +1,10 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # chinv: Change in inventory scaled by total assets
 # 'A001123000' : Net Inventories 净存货
 # 'A001000000' :  total asset
-#
 import numpy as np
 def equation(x):
     x['chinv'] = (x['A001123000'] / x['A001000000']).diff(periods=3)

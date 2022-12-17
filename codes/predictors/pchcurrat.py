@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # pchcurrat: Percentage change in current ratio (current liabilities divided by
 # current asset)
 # 'A001100000' : Total Assets

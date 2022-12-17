@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # 1-month cumulative return.
 # 'Mclsprc'
 def equation(x):

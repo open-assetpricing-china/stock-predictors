@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # 'A001101000' : cash and cash equivalents
 # df['A001000000'] -> Total Asset
 def lag_one_month(x):

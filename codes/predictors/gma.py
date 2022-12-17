@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # gma: Revenue minus cost of goods sold divided by lagged total assets.
 # 'B001100000' : Total Revenue
 # 'C001001000' : Cash Received from Sales of Goods or Rendering of Services

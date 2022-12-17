@@ -1,5 +1,8 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # stdacc : Standard deviation of 16 quarters of accruals from month t - 16 to t - 1
-#
 # CA:   'A001100000', current assets
 # CASH: 'A001101000', cash / cash equivalents
 # CL:   'A002100000', current liabilities

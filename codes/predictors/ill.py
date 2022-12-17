@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # Average of daily (absolute return / RMB volume) in month t
 # para['Ahvaltrd_D'] = '日盘后成交总额' # 元
 # ['Dnvaltrd'] = '日个股交易金额' # 单位： 元

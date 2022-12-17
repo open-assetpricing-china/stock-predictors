@@ -1,3 +1,7 @@
+'''
+@Author: Yi Tian
+@Email: 12232985@mail.sustech.edu.cn
+'''
 # realestate: Investment real estates divided by fixed assets. Data are acquired from CSMAR
 # 房地产：投资性房地产除以固定资产。从CSMAR获取数据
 # Net Fixed Assets：df['A001212000']

@@ -1,5 +1,8 @@
-# # 'C001001000': Cash Received from Sales of Goods or Rendering of Services
-#
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
+# 'C001001000': Cash Received from Sales of Goods or Rendering of Services
 def equation_s_p_sale(x):
     x['p_sale'] = x['C001001000' ] / x['C001001000' ].sum()
     return x

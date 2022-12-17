@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # 'D000100000' : Net Cash Flow from Operating Activities
 # 'Msmvttl' : size
 def lag_one_month(x):

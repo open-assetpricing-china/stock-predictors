@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 #
 # CA:   'A001100000', current assets
 # CASH: 'A001101000', cash / cash equivalents

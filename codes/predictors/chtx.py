@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # chtx: Percent change in taxes from quarter t-1 to t.
 # 'A002113000' : Taxes Payable
 #

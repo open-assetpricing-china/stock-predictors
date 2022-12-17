@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # salerev: Quarterly sales divided by accounts receivable
 # 'C001001000' : Cash Received from Sales of Goods or Rendering of Services
 # 'A001111000' : Net Accounts Receivable

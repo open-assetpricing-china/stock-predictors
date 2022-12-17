@@ -1,3 +1,7 @@
+'''
+@Author: Yi Tian
+@Email: 12232985@mail.sustech.edu.cn
+'''
 # Total Operating Revenue:df['B001100000']
 # R&D expenses:df['A001219000']
 #

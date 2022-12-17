@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # lev : Total liabilities divided by quarter-end market capitalization
 # 'A002000000': Total Liabilities
 # 'Msmvttl': 'size'

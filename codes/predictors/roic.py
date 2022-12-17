@@ -1,3 +1,7 @@
+'''
+@Author: Yi Tian
+@Email: 12232985@mail.sustech.edu.cn
+'''
 # roic: Quarterly earnings before interest and taxes minus nonoperating income divided by non-cash enterprise value
 # Total Profit: B001000000
 # Non-operating Income: B001400000

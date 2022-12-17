@@ -1,3 +1,7 @@
+'''
+@Author: Yi Tian
+@Email: 12232985@mail.sustech.edu.cn
+'''
 # R&D expenses:df['A001219000']
 # Total asset: df['A001000000']
 # R&D expenses/Total asset increase > 0.05则rd=1,否则为0

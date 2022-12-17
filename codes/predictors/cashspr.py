@@ -1,4 +1,7 @@
-#
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # cashspr
 # (size + long term debt - total assets) / (cash and cash equivalents)
 # 'size': size

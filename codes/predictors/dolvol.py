@@ -1,6 +1,9 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # dolvol : Natural logarithm of trading volume times price per share from month t-2
 # 'Mnvaltrd': 'mtrdvalue'
-#
 import numpy as np
 #
 def equation(x):

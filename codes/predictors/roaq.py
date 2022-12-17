@@ -1,3 +1,7 @@
+'''
+@Author: Yi Tian
+@Email: 12232985@mail.sustech.edu.cn
+'''
 # Total Comprehensive Income: df['B006000000']
 # Total assets: A001000000
 # roaq = Income before extraordinary items/one quarter lagged total assets

@@ -1,5 +1,8 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # chmom : Cumulative returns from months t - 6 to t - 1 minus months t - 12 to t - 7.
-
 def equation(x):
     x['chmom'] = (x['Mclsprc'].shift(1) - x['Mclsprc'].shift(6)) / x[
         'Mclsprc'].shift(6) - (x['Mclsprc'].shift(7) - x['Mclsprc'].shift(12)) / x['Mclsprc'].shift(12)

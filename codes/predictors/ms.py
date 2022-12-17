@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # ms: Sum of 8 indicator variables for fundamental performance
 # following the corresponding definitions in Mohanram (2005).
 # G1: ROA >= ind.median; ROA = Net Income / average assets

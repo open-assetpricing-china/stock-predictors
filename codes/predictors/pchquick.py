@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # pchquick: Percentage change in quick ratio.
 # Quick Ratio = (Current assets - Inventory - Prepaid expenses) / Current Liabilities
 # 'A001100000' : Total Current Assets

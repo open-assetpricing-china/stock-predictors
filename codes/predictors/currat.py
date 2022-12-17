@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # currrat: The ratio of current assets to current liabilities
 # 'A001100000', current assets
 # 'A002100000', current liabilities

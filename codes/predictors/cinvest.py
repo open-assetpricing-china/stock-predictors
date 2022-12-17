@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # cinvest : Change over one quarter in fixed assets divided by sales - average of this variable for
 # prior 3 quarters
 # 'A001212000' :  Net Fixed Assets

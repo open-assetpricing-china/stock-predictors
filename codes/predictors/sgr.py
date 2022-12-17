@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # sgr: Quarterly percentage change in sales
 # 'C001001000': Cash Received from Sales of Goods or Rendering of Services
 #

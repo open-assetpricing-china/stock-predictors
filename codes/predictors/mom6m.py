@@ -1,5 +1,8 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # 6-month cumulative return.
-#
 def equation(x):
     x['mom6m'] = x['Mclsprc'].pct_change(periods=6).shift(1)
     return x

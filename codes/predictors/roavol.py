@@ -1,3 +1,7 @@
+'''
+@Author: Yi Tian
+@Email: 12232985@mail.sustech.edu.cn
+'''
 # Standard deviation of 16 quarters of income before extraordinary items divided by average total assets.
 # Total assets: A001000000
 # Total Comprehensive Income: df['B006000000']

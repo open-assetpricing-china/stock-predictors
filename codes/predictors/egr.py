@@ -1,3 +1,7 @@
+'''
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
+'''
 # egr: Quarterly percent change in book value of equity.
 # df['A001000000'] -> Total Asset
 import numpy as np

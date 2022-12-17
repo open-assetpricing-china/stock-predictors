@@ -1,3 +1,7 @@
+'''
+@Author: Yi Tian
+@Email: 12232985@mail.sustech.edu.cn
+'''
 # roeq: Income before extraordinary items divided by lagged common shareholders’ equity
 # Total Comprehensive Income: B006000000
 # Total Shareholders’ Equity: A003000000
