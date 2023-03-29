@@ -2,7 +2,7 @@
 @Author: Yuan Yang
 @Email: yangy7@sustech.edu.cn
 '''
-#
+# acc = [(ΔCA - ΔCASH) - (ΔCL - ΔSTD - ΔTP) - Dep] / Total Assets
 # CA:   'A001100000', current assets
 # CASH: 'A001101000', cash / cash equivalents
 # CL:   'A002100000', current liabilities
@@ -17,7 +17,7 @@ def equation(x):
     x = x.copy()
     x['acc'] =( (x['A001100000'].diff() - x['A001101000'].diff()) - (
             x['A002100000'].diff() - x['A002126000'].diff() - x['B002100000'].diff()) - (
-            x['D000103000'].diff() + x['D000104000']) ) / x['A001000000']
+            x['D000103000'] + x['D000104000']) ) / x['A001000000']
     return x
 def lag_one_month(x):
     x= x.copy()

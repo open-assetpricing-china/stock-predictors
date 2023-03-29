@@ -20,26 +20,17 @@
 # 'A001121000' : Net Other Receivables
 #
 def equation(x):
-    x['pchsale_pchrect'] = x['C001001000'].pct_change(periods=3) - (
-        x['A001110000'] + x['A001111000'] + x['A0I1113000']
-        + x['A0I1114000'] + x['A0I1115000'] + x['A0I1116000']
-        + x['A0I1116101'] + x['A0I1116201'] + x['A0I1116301']
-        + x['A0I1116401'] + x['A001119000'] + x['A001120000']
-        + x['A001121000']).pct_change(periods=3)
+    x['pchsale_pchrect'] = x['C001001000'].pct_change(periods=3) - \
+                           x['A001111000'].pct_change(periods=3)
     return x
-
 #
 def lag_one_month(x):
     x = x.copy()
     x['pchsale_pchrect'] = x['pchsale_pchrect'].shift()
     return x
 #
-
 def calculation(df_input):
-    df_output = df_input['monthly'][['stkcd', 'month', 'C001001000', 'A001110000', 'A001111000',
-                                     'A0I1113000','A0I1114000', 'A0I1115000','A0I1116000',
-                                     'A0I1116101','A0I1116201', 'A0I1116301','A0I1116401',
-                                     'A001119000','A001120000', 'A001121000' ]]
+    df_output = df_input['monthly'][['stkcd', 'month', 'C001001000', 'A001111000',]]
     df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
     df_output = df_output[['stkcd', 'month', 'pchsale_pchrect' ]]
     df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)

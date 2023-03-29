@@ -2,7 +2,7 @@
 @Author: Yuan Yang
 @Email: yangy7@sustech.edu.cn
 '''
-# Same as acc except that the numerator is divided by the absolute value
+# pctacc: Same as acc except that the numerator is divided by the absolute value
 # of net income if net income = 0 then net income set to 0.01 for
 # denominator.
 # CA:   'A001100000', current assets
@@ -19,9 +19,8 @@ def equation(df):
     df = df.copy()
     df['pctacc'] =(( (df['A001100000'].diff(periods=3) - df['A001101000'].diff(periods=3)) - (
         df['A002100000'].diff(periods=3) - df['A002126000'].diff(periods=3) -
-        df['B002100000'].diff(periods=3)) -
-                     (df['D000103000'].diff(periods=3) +
-                      df['D000104000']) ).abs() / df['A001000000']).pct_change(periods=3)
+        df['B002100000'].diff(periods=3)) - (df['D000103000']
+                                             + df['D000104000']) ).abs() / df['A001000000']).pct_change(periods=3)
     return df
 #
 def lag_one_month(x):

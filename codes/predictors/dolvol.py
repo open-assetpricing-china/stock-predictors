@@ -3,11 +3,11 @@
 @Email: yangy7@sustech.edu.cn
 '''
 # dolvol : Natural logarithm of trading volume times price per share from month t-2
-# 'Mnvaltrd': 'mtrdvalue'
+# 'Mnvaltrd':  'Value of Shares Traded in Month (MNVALTRD)'  # 当月交易的股票价值（MNVALTRD）
 import numpy as np
 #
 def equation(x):
-    x['dolvol'] = np.log(x['Mnvaltrd']).shift(2)
+    x['dolvol'] = np.log(x['Mnvaltrd']).shift(2) # lag two month
     return x
 #
 def calculation(df_input):

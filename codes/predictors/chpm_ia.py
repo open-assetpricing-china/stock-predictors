@@ -4,11 +4,11 @@
 '''
 # chpm: Change in income before extraordinary items scaled by scales.
 # 'C001001000': Cash Received from Sales of Goods or Rendering of Services
-# 'B001400000': Non-operating Income
-#
+# 'B001100000': Total Operating Revenue,
+# The sum of all income arising from operating business of company.
 import numpy as np
 def equation(x):
-    x['chpm'] = (x['B001400000'] / x['C001001000']).diff(periods=3)
+    x['chpm'] = (x['B001100000'] / x['C001001000']).diff(periods=3)
     return x
 #
 def mean_value(x):
@@ -27,7 +27,7 @@ def lag_one_month(x):
 #
 def calculation(df_input):
     df = df_input['monthly']
-    df_output = df[['stkcd', 'month', 'B001400000','C001001000', 'ind_cd']]
+    df_output = df[['stkcd', 'month', 'B001100000','C001001000', 'ind_cd']]
     df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
     df_output = df_output.groupby(['month', 'ind_cd']).apply(lambda x: mean_value(x)).reset_index(drop=True)
     df_output['chpm_ia'] = df_output['chpm'] - df_output['chpm_ind_mean']

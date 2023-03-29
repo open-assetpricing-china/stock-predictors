@@ -2,10 +2,12 @@
 @Author: Yuan Yang
 @Email: yangy7@sustech.edu.cn
 '''
-# cashspr
+# cashspr: Cash productivity, which is defined as quarter-end market capitalization plus
+# long-term debt minus total assets divided by cash and equivalents.
+#
 # (size + long term debt - total assets) / (cash and cash equivalents)
 # 'size': size
-# 'A002203000': long term debt
+# 'A002203000': (Bonds payable) long term debt
 # 'A001000000': total assets
 # 'A001101000': cash and cash equivalents
 # 'Msmvttl' : size

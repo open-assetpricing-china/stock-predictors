@@ -94,33 +94,25 @@ def calculation(df_input):
     df_output['CAPINT'] = (df_output['A001212000'] + df_output['A001218000']
                            + df_output['A001222000']) / df_output['A001000000']
     df_output['ADINT'] = df_output['B001209000'] / df_output['A001000000']
-
+    #
     df_output = df_output.groupby(['month', 'stkcd']).apply(mean_value).reset_index(drop=True)
-    print('aaa')
     df_output['G1'] = 0
     df_output.loc[(df_output['ROA'] >= df_output['ROA_ind']), 'G1'] = 1
-    print('bbb')
     df_output['G2'] = 0
     df_output.loc[(df_output['CFROA'] >= df_output['CFROA_ind']),'G2'] = 1
-    print('ccc')
     df_output['G3'] = 0
     df_output.loc[(df_output['CFROA'] >= df_output['ROA']), 'G3'] = 1
-    print('ddd')
     df_output['G4'] = 0
     df_output.loc[(df_output['VARROA'] <= df_output['VARROA_ind']), 'G4'] = 1
-    print('111')
     df_output['G5'] = 0
     df_output.loc[(df_output['VARSGR'] <= df_output['VARSGR_ind']), 'G5'] = 1
-    print('222')
     df_output['G6'] = 0
     df_output.loc[(df_output['RDINT'] >= df_output['RDINT_ind']), 'G6'] = 1
-    print('333')
     df_output['G7'] = 0
     df_output.loc[(df_output['CAPINT'] >= df_output['CAPINT_ind']), 'G7'] = 1
-    print('444')
     df_output['G8'] = 0
     df_output.loc[(df_output['ADINT'] >= df_output['ADINT_ind']), 'G8'] = 1
-    print('555')
+    #
     df_output['ms'] = df_output['G1'] + df_output['G2'] + df_output['G3'] + df_output['G4'] + \
                       df_output['G5'] + df_output['G6'] + df_output['G7'] + df_output['G8']
     df_output = df_output[['stkcd', 'month', 'ms']]

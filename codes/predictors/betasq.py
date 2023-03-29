@@ -2,6 +2,7 @@
 @Author: Yuan Yang
 @Email: yangy7@sustech.edu.cn
 '''
+# Stock-level market beta squared.
 import statsmodels.api as sm
 from sklearn.linear_model import LinearRegression
 import numpy as np

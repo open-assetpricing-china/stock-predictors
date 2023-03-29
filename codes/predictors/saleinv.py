@@ -7,7 +7,7 @@
 # 'A001123000' : Net inventories
 
 def equation(x):
-    x['saleinv'] = (x['C001001000'] / x['A001123000']).shift()
+    x['saleinv'] = (x['C001001000'] / x['A001123000']).shift() # lag one month
     return x
 #
 def calculation(df_input):

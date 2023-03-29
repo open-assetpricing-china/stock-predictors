@@ -6,7 +6,6 @@
 # 'C001001000' : Cash Received from Sales of Goods or Rendering of Services
 # 'A001101000' : cash and cash equivalents
 #
-
 def equation(x):
     x['salecash'] = (x['C001001000'] / x['A001101000']).shift() # lag one month
     return x

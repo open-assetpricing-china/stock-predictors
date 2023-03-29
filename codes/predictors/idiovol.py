@@ -5,7 +5,8 @@
 import statsmodels.api as sm
 from sklearn.linear_model import LinearRegression
 import numpy as np
-#
+# idiovol: Standard deviation of residuals of weekly returns on weekly equal weighted market
+# returns for 3 years prior to month end.
 # 'Wsmvttl': 'size'
 def regression(x, periods1, periods2):
     x['idiovol'] = np.nan

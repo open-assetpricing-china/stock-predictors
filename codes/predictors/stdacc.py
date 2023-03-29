@@ -18,7 +18,7 @@ def equation(df):
     df['acc_'] = ((df['A001100000'].diff(periods=4) - df['A001101000'].diff(periods=3)) - (
             df['A002100000'].diff(periods=3) - df['A002126000'].diff(periods=3) -
             df['B002100000'].diff(periods=3)) - (
-                         df['D000103000'].diff(periods=3) + df['D000104000'])) / df['A001000000']
+                         df['D000103000'] + df['D000104000'])) / df['A001000000']
     df['stdacc'] = df['acc_'].rolling(48).std()
     return df
 #

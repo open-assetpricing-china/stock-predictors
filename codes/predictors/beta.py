@@ -2,11 +2,14 @@
 @Author: Yuan Yang
 @Email: yangy7@sustech.edu.cn
 '''
+# beta: We estimate stock-level beta using weekly returns and value weighted market
+# returns for 3 years ending month t-1 with at least 52 weeks of returns.
+# Stock returns are acquired from WIND database.
+#
 import statsmodels.api as sm
 from sklearn.linear_model import LinearRegression
 import numpy as np
 # 'Wsmvttl' : size,
-#
 def regression(x, periods1, periods2):
     x['beta'] = np.nan
     lr = LinearRegression()

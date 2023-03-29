@@ -1,17 +1,23 @@
 '''
-@Author: Yi Tian
-@Email: 12232985@mail.sustech.edu.cn
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
 '''
-# Total Comprehensive Income: df['B006000000']
-# Total assets: A001000000
 # roaq = Income before extraordinary items/one quarter lagged total assets
+# 'B001100000': Total Operating Revenue, The sum of all income arising from operating business of the company.
+# A001000000: Total assets
 #
 def equation(x):
-    x['roaq'] = x['B006000000'] / x['A001000000'].shift(3)
+    x['roaq'] = x['B001100000'] / x['A001000000'].shift(3)
+    return x
+#
+def lag_one_month(x):
+    x = x.copy()
+    x['roaq'] = x['roaq'].shift()
     return x
 #
 def calculation(df_input):
-    df_output = df_input['monthly'][['stkcd', 'month', 'B006000000', 'A001000000']]
+    df_output = df_input['monthly'][['stkcd', 'month', 'B001100000', 'A001000000']]
     df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
     df_output = df_output[['stkcd', 'month', 'roaq' ]]
+    df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)
     return df_output

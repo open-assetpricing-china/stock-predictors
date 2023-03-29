@@ -1,6 +1,6 @@
 '''
-@Author: Yi Tian
-@Email: 12232985@mail.sustech.edu.cn
+@Author: Yuan Yang
+@Email: yangy7@sustech.edu.cn
 '''
 #
 def equation(x):

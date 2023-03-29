@@ -2,7 +2,10 @@
 @Author: Yuan Yang
 @Email: yangy7@sustech.edu.cn
 '''
+# bm: Book-to-market ratio, which equals the book value of equity divided by market capitalization
+# book value of equity: 'A001000000'(total asset)
 # 'Msmvttl': 'size'
+#
 def lag_one_month(x):
     x = x.copy()
     x['bm'] = x['bm'].shift()

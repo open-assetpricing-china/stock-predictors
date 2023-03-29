@@ -2,6 +2,7 @@
 @Author: Yuan Yang
 @Email: yangy7@sustech.edu.cn
 '''
+#
 # Monthly percent change in shares outstanding
 # 'Msmvttl' : 'size'
 def equation(x):

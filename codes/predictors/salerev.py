@@ -7,7 +7,7 @@
 # 'A001111000' : Net Accounts Receivable
 #
 def equation(x):
-    x['salerev'] = (x['C001001000'] / x['A001111000']).shift()
+    x['salerev'] = (x['C001001000'] / x['A001111000']).shift() # lag one month
     return x
 #
 def calculation(df_input):

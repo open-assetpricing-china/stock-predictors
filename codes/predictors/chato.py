@@ -2,6 +2,7 @@
 @Author: Yuan Yang
 @Email: yangy7@sustech.edu.cn
 '''
+# Change in sales divided by average total assets
 # 'C001001000': Cash Received from Sales of Goods or Rendering of Services
 # 'A001000000': Total Assets
 import numpy as np

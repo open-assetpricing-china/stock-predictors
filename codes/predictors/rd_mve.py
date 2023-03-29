@@ -6,7 +6,7 @@
 # R&D expenses:df['A001219000']
 # 'Msmvttl' : size
 def equation(x):
-    x['rd_mve'] = (x['A001219000'] / x['Msmvttl']).shift()
+    x['rd_mve'] = (x['A001219000'] / x['Msmvttl']).shift() # lag one month
     return x
 #
 def calculation(df_input):

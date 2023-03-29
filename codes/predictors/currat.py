@@ -3,8 +3,8 @@
 @Email: yangy7@sustech.edu.cn
 '''
 # currrat: The ratio of current assets to current liabilities
-# 'A001100000', current assets
-# 'A002100000', current liabilities
+# 'A001100000', total current assets
+# 'A002100000', Total Current Liabilities
 import numpy as np
 def equation(x):
     x['currat'] = x['A001100000'] / x['A002100000']

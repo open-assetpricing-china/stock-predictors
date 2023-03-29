@@ -2,8 +2,9 @@
 @Author: Yuan Yang
 @Email: yangy7@sustech.edu.cn
 '''
+# cashdebt: Earnings divided by total liabilities.
 # 'B002000000' : Net Profit
-# df['A002000000'] -> Total Liabilities
+# 'A002000000' :  Total Liabilities
 def lag_one_month(x):
     x = x.copy()
     x['cashdebt'] = x['cashdebt'].shift()

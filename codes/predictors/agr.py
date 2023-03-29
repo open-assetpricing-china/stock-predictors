@@ -2,7 +2,8 @@
 @Author: Yuan Yang
 @Email: yangy7@sustech.edu.cn
 '''
-# # df['A001000000'] -> total assets
+# agr: Annual percent change in total assets.
+# 'A001000000' -> total assets
 def equation(x):
     x['agr'] = (x['A001000000'] - x['A001000000'].shift(12)) / x['A001000000'].shift(12)
     return x

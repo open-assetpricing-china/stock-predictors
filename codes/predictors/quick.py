@@ -3,8 +3,8 @@
 @Email: yangy7@sustech.edu.cn
 '''
 # Quick ratio = (current assets - inventory) / current liabilities
-# 'A001100000' : Total Assets
-# 'A002100000' : Total Liabilities
+# 'A001100000' : Total current Assets
+# 'A002100000' : Total current Liabilities
 # 'A001123000' : Net inventories
 #
 def equation(x):

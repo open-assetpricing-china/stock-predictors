@@ -4,8 +4,8 @@
 '''
 # pchcurrat: Percentage change in current ratio (current liabilities divided by
 # current asset)
-# 'A001100000' : Total Assets
-# 'A002100000' : Total Liabilities
+# 'A001100000' : total current assets
+# 'A002100000' : total current liabilities
 import numpy as np
 def equation(x):
     x['pchcurrat'] = (x['A002100000'] / x['A001100000']).pct_change(periods=3)

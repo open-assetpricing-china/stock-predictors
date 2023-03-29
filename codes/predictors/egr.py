@@ -3,7 +3,7 @@
 @Email: yangy7@sustech.edu.cn
 '''
 # egr: Quarterly percent change in book value of equity.
-# df['A001000000'] -> Total Asset
+# 'A001000000' -> Total Asset
 import numpy as np
 def equation(x):
     x['egr'] = x['A001000000'].pct_change(periods=3)
@@ -18,7 +18,7 @@ def lag_one_month(x):
     x = x.copy()
     x['egr'] = x['egr'].shift()
     return x
-
+#
 def calculation(df_input):
     df = df_input['monthly']
     df_output = df[['stkcd', 'month', 'A001000000']]
