@@ -16,7 +16,7 @@ def fill_0(x):
     return x
 #
 def lag_one_month(x):
-    x = x.copy
+    x = x.copy()
     x['rsup'] = x['rsup'].shift()
     return x
 

@@ -3,6 +3,8 @@ from os.path import dirname, abspath
 path = dirname(dirname(abspath(__file__))) # back to folder 'OSAP' need back two steps
 sys.path.append(path)
 #print('sys.path:', str(sys.path))
+import warnings
+warnings.filterwarnings("ignore")
 from codes.utils.assemble_factory import read_parameters, download_data, build_data
 from codes.utils.assemble_factory import calculate_predictors, predictors_wash, factors_model
 from codes.utils.assemble_factory import predictors_to_portfolios
