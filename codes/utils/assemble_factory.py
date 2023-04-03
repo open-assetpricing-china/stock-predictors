@@ -102,13 +102,16 @@ def calculate_predictors(parameter):
     #
     assemble = assemble_predictors(path=predictor_file_path)
     module_dict = assemble.predictors_info()
-    print('total predictors:', list(module_dict.keys()))
+    print('total predictors: \n', list(module_dict.keys()))
+    print('number of total predictors:', len(list(module_dict.keys())))
     assemble_output = assemble_output_predictors(para = para) #
     exist_predictors = assemble_output.path_files_name()  #
     print('successful realized predictors: \n', exist_predictors)
+    print('number of successful realized predictors:', len(exist_predictors))
     total_predictors = list(module_dict.keys())
     predictors_list = list(set(total_predictors) - set(exist_predictors))
     print('predictors need to calculate: \n', predictors_list)
+    print('number of predictors need to calculate:', len(predictors_list))
     if len(predictors_list) > 0:
         df_input = {}
         df_input['monthly'] = DataForPredictors().monthly()
@@ -130,6 +133,7 @@ def calculate_predictors(parameter):
     else:
         print('Done! Not need to calculate predictors')
     return
+#
 def predictors_wash(parameter):
     print('washing predictors files:')
     para = parameter.run_id()
