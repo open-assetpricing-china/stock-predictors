@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding = 'UTF-8' ?>
+<para>
+    <run_id> 'test_1' </run_id>
+    <data_download>
+        <Is_download_data> 'no' </Is_download_data>
+    </data_download>
+    <data_build>
+        <Is_build_monthly_data> 'yes' </Is_build_monthly_data>
+        <Is_build_weekly_data> 'yes' </Is_build_weekly_data>
+        <Is_build_daily_data> 'yes' </Is_build_daily_data>
+    </data_build>
+    <calculate_predictors>
+        <predictor_file_path> './predictors/' </predictor_file_path>
+    </calculate_predictors>
+    <data_clean>
+        <Is_data_standard> 'yes' </Is_data_standard>
+        <Is_add_filters> 'no' </Is_add_filters>
+        <filter_exclude_bottom_size type="number"> 0.3 </filter_exclude_bottom_size>
+        <filter_exclude_trdday_lsyr type="number"> 126 </filter_exclude_trdday_lsyr>
+        <filter_exclude_trdday_lsmnt type="number" > 15 </filter_exclude_trdday_lsmnt>
+        <filter_exclude_begin_trdday> '1990-12' </filter_exclude_begin_trdday>
+    </data_clean>
+    <portfolio_construct>
+        <Is_neutral> 'no' </Is_neutral>
+        <way_weight> 'size' </way_weight>
+        <!-- {'size' or 'ew'}, 'size': construct size valued portfolio;
+          'ew': construct equal weighted portfolio-->
+    </portfolio_construct>
+    <factor_model>
+        <Is_construct_model> 'no' </Is_construct_model>
+    </factor_model>
+    <portfolio_regression>
+        <Is_portfolio_regression> 'no' </Is_portfolio_regression>
+        <reg_model> 'ch3' </reg_model>
+        <!-- {'ch3' or 'capm'},
+        'ch3': Chinese 3-factors model y = alpha + b1 MKT + b2 SMB + b3 VMG
+        'capm': y = alpha + b MKT-->
+        <start_month> '2000-07' </start_month>
+        <end_month> '2021-12' </end_month>
+        <Is_portfolio_regression_rolling> 'no' </Is_portfolio_regression_rolling>
+        <rolling_period type="number"> 10 </rolling_period>
+    </portfolio_regression>
+</para>
