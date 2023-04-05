@@ -6,7 +6,7 @@ sys.path.append(path)
 import warnings
 warnings.filterwarnings("ignore")
 from codes.utils.assemble_factory import read_parameters, download_data, build_data
-from codes.utils.assemble_factory import calculate_predictors, predictors_wash, factors_model
+from codes.utils.assemble_factory import calculate_predictors, predictors_clean, factors_model
 from codes.utils.assemble_factory import predictors_to_portfolios
 from codes.utils.assemble_factory import portfolios_risk_adjust
 from codes.utils.assemble_factory import portfolios_risk_adjust_rolling
@@ -17,7 +17,7 @@ if __name__ == '__main__':
     download_data(parameter=parameter) # downloading raw data
     build_data(parameter=parameter) # raw data -> monthly data, weekly data, daily data
     calculate_predictors(parameter=parameter) # calculate predictors
-    predictors_wash(parameter=parameter) # wash predictors
+    predictors_clean(parameter=parameter) # clean predictors
     predictors_to_portfolios(parameter=parameter) # obtain portfolio raw return
     factors_model(parameter=parameter) # construct factors model
     portfolios_risk_adjust(parameter=parameter) # get the regression performance of portfolio raw return

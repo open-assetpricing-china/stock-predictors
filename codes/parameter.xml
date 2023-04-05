@@ -12,14 +12,14 @@
     <calculate_predictors>
         <predictor_file_path> './predictors/' </predictor_file_path>
     </calculate_predictors>
-    <data_wash>
+    <data_clean>
         <Is_data_standard> 'yes' </Is_data_standard>
         <Is_add_filters> 'no' </Is_add_filters>
         <filter_exclude_bottom_size type="number"> 0.3 </filter_exclude_bottom_size>
         <filter_exclude_trdday_lsyr type="number"> 126 </filter_exclude_trdday_lsyr>
         <filter_exclude_trdday_lsmnt type="number" > 15 </filter_exclude_trdday_lsmnt>
         <filter_exclude_begin_trdday> '1990-12' </filter_exclude_begin_trdday>
-    </data_wash>
+    </data_clean>
     <portfolio_construct>
         <Is_neutral> 'no' </Is_neutral>
         <way_weight> 'size' </way_weight>
@@ -27,7 +27,7 @@
           'ew': construct equal weighted portfolio-->
     </portfolio_construct>
     <factor_model>
-        <Is_construct_model> 'no' </Is_construct_model>
+        <Is_construct_model> 'yes' </Is_construct_model>
     </factor_model>
     <portfolio_regression>
         <Is_portfolio_regression> 'yes' </Is_portfolio_regression>

@@ -134,16 +134,16 @@ def calculate_predictors(parameter):
         print('Done! Not need to calculate predictors')
     return
 #
-def predictors_wash(parameter):
-    print('washing predictors files:')
+def predictors_clean(parameter):
+    print('cleaning predictors files:')
     para = parameter.run_id()
-    path = '../output/' + para['run_id'] + '/predictors_wash/'
+    path = '../output/' + para['run_id'] + '/predictors_clean/'
     param.mkdir(path=path)
     predictors_file_path = '../output/' + para['run_id'] + '/predictors/'
     file_info_1 = assemble_csv_file_info(path=predictors_file_path)
     predictors_total = file_info_1.path_files_name()
     predictors_list = list(predictors_total)
-    para_wash = parameter.data_wash()
+    para_wash = parameter.data_clean()
     if para_wash['Is_data_standard'] == 'yes':
         t0 = time.time()
         df_cell = {}
@@ -187,7 +187,7 @@ def predictors_wash(parameter):
             df_f = pd.merge(df, df1, on=['stkcd', 'month'], how='left')
             save_name = path + predictor_name + '.csv'
             df_f.to_csv(save_name)
-        print('Done! of washing predictors files with the time cost', time.time() - t0)
+        print('Done! of cleaning predictors files with the time cost', time.time() - t0)
     elif para_wash['Is_add_filters'] == 'no':
         t0 = time.time()
         df0 = pd.read_parquet('../data/build_data/basic_monthly_data.parquet')
@@ -199,7 +199,7 @@ def predictors_wash(parameter):
         #
         for it in range(len(list(df_cell.keys()))):
             predictor_name =  list(df_cell.keys())[it]
-            print('wash predictor without filters:', predictor_name)
+            print('cleaning predictor without filters:', predictor_name)
             df1 = df_cell[predictor_name]
             df1 = df1[['stkcd', 'month', predictor_name]]
             df1.sort_values(by=['stkcd', 'month'], inplace=True)
@@ -209,7 +209,7 @@ def predictors_wash(parameter):
             df_merge = pd.merge(df0, df1, on=['stkcd', 'month'], how='left')
             save_name = path + predictor_name + '.csv'
             df_merge.to_csv(save_name)
-        print('Done! of washing predictors files with the time cost', time.time() - t0)
+        print('Done! of cleaning predictors files with the time cost', time.time() - t0)
     else:
         raise Exception(' you input wrong parameters of "Is_add_filters" in '
                         'file <./parameter.xml>')
@@ -221,7 +221,7 @@ def predictors_to_portfolios(parameter):
     para_portfolio = parameter.portfolio_construct()
     path = '../output/' + para['run_id'] + '/portfolio_ret/'
     param.mkdir(path=path)
-    predictors_file_path = '../output/' + para['run_id'] + '/predictors_wash/'
+    predictors_file_path = '../output/' + para['run_id'] + '/predictors_clean/'
     #
     file_info_1 = assemble_csv_file_info(path=predictors_file_path)
     predictor_total = file_info_1.path_files_name()

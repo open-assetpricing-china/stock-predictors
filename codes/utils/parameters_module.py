@@ -33,13 +33,13 @@ class parameters(object):
                 for it1 in it:
                     para_data_build[it1.tag] = eval(it1.text)
                 return para_data_build
-    def data_wash(self):
+    def data_clean(self):
         for it in self.para_input:
-            if it.tag == 'data_wash':
-                para_data_wash = {}
+            if it.tag == 'data_clean':
+                para_data_clean = {}
                 for it1 in it:
-                    para_data_wash[it1.tag] = eval(it1.text)
-                return para_data_wash
+                    para_data_clean[it1.tag] = eval(it1.text)
+                return para_data_clean
     def portfolio_construct(self):
         for it in self.para_input:
             if it.tag == 'portfolio_construct':
@@ -66,7 +66,7 @@ class parameters(object):
         para['run_id'] = self.run_id()['run_id']
         para['data_download'] = self.data_download()
         para['data_build'] = self.data_build()
-        para['data_wash'] = self.data_wash()
+        para['data_clean'] = self.data_clean()
         para['portfolio_construct'] = self.portfolio_construct()
         para['factor_model'] = self.factor_model()
         para['portfolio_regression'] = self.portfolio_regression()
