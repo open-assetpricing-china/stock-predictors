@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # acc = [(ΔCA - ΔCASH) - (ΔCL - ΔSTD - ΔTP) - Dep] / Total Assets
 # CA:   'A001100000', current assets

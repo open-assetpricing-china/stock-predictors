@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # cashdebt: Earnings divided by total liabilities.
 # 'B002000000' : Net Profit

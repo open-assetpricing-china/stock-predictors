@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # invest : The sum of annual change in fixed assets and annual change in
 # inventories divided by lagged total assets.

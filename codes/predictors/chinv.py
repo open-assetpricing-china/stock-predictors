@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # chinv: Change in inventory scaled by total assets
 # 'A001123000' : Net Inventories 净存货

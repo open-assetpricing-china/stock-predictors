@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # cfp: Operating cash flow divided by quarter-end market capitalization.
 # 'D000100000' : Net Cash Flow from Operating Activities

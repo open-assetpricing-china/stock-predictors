@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # roeq: Income before extraordinary items divided by lagged common shareholders’ equity
 # 'B001100000': Total Operating Revenue, The sum of all income arising from operating business of the company.

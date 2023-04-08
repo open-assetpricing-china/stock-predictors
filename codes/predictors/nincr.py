@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # nincr: Number of consecutive quarters (up to eight quarters) with an
 # increase in earnings.

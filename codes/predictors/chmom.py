@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # chmom : Cumulative returns from months t - 6 to t - 1 minus months t - 12 to t - 7.
 def equation(x):

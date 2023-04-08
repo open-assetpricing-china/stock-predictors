@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # bm: Book-to-market ratio, which equals the book value of equity divided by market capitalization
 # 'Msmvttl' : size

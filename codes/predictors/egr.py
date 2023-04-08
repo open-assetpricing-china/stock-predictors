@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # egr: Quarterly percent change in book value of equity.
 # 'A001000000' -> Total Asset

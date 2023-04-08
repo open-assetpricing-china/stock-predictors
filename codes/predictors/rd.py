@@ -1,6 +1,6 @@
 '''
 @Author: Yi Tian
-@Email: 12232985@mail.sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # rd: An indicator variable equal to 1 if R&D expense as a percentage of total assets has an
 # increase greater than 5%.

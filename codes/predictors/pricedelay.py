@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # The proportion of variation in weekly returns for 36 months ending in month t
 # explained by 4 lages of weekly market returns incremental to

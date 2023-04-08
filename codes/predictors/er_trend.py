@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # er_trend: This trend factor is constructed following the definition in Liu et al. (2020)
 # python pandas ewm 一次指数加权移动平均 : https://blog.csdn.net/small__roc/article/details/123482186

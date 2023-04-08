@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # Standard deviation of 16 quarters of income before extraordinary items divided by average total assets.
 # 'B001100000': Total Operating Revenue, The sum of all income arising from operating business of the company.

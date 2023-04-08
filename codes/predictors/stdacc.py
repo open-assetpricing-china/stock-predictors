@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # stdacc : Standard deviation of 16 quarters of accruals from month t - 16 to t - 1
 # CA:   'A001100000', current assets

@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # Sum of 9 indicator variables that are defined similarly as in Piotroski (2000)
 # F_SCORE = F_ROA + F_ΔROA + F_CFO + F_ACCRUAL +

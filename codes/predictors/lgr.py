@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # lgr : Quarterly percent change in total liabilities
 # 'A002000000': Total Liabilities

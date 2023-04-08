@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # dy: Total dividends divided by market capitalization at year end
 # 'A002115000' : Dividends Payable

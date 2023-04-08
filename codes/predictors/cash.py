@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # cash: cash and cash equivalents divided by average total assets.
 # 'A001101000' : cash and cash equivalents

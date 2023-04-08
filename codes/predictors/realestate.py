@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # realestate: Investment real estates divided by fixed assets. Data are acquired from CSMAR
 # 房地产：投资性房地产除以固定资产。从CSMAR获取数据

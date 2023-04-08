@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # gma: Revenue minus cost of goods sold divided by lagged total assets.
 # 'B001100000' : Total Revenue

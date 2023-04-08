@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # roic: Quarterly earnings before interest and taxes minus nonoperating
 # income divided by non-cash enterprise value

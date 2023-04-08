@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # ms: Sum of 8 indicator variables for fundamental performance
 # following the corresponding definitions in Mohanram (2005).

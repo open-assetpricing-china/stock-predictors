@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # chpm: Change in income before extraordinary items scaled by scales.
 # 'C001001000': Cash Received from Sales of Goods or Rendering of Services

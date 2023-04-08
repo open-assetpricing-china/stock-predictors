@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # operprof : Quarterly operating profit divided by lagged commom shareholders' equity
 # Total shareholders' equity: 'A003000000'

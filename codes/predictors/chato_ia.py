@@ -1,14 +1,14 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # industry-adjusted chato
-# 'C001001000': Cash Received from Sales of Goods or Rendering of Services
+# 'B001100000' : Total operating revenue, ==> sales
 # 'A001000000': Total Assets
 import numpy as np
 def equation(x):
     x = x.copy()
-    x['chato'] = (x['C001001000'] / x['A001000000']).diff(periods=3)
+    x['chato'] = (x['B001100000'] / x['A001000000']).diff(periods=3)
     return x
 #
 def mean_value(x):
@@ -27,7 +27,7 @@ def lag_one_month(x):
 #
 def calculation(df_input):
     df = df_input['monthly']
-    df_output = df[['stkcd', 'month', 'C001001000','A001000000','ind_cd' ]]
+    df_output = df[['stkcd', 'month', 'B001100000','A001000000','ind_cd' ]]
     df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
     df_output = df_output.groupby(['month','ind_cd']).apply(lambda x:mean_value(x)).reset_index(drop=True)
     df_output['chato_ia'] = df_output['chato'] - df_output['chato_ind_mean']

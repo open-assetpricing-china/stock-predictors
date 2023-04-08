@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # pchcapx_ia : Industry adjusted percentage change in capital expenditure
 #===========================================================================

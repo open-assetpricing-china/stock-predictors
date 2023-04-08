@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # zerotrade Turnover weighted number of zero trading days in month t - 1.
 # ['Mnshrtrd'] = 'Number of Shares Traded in Month (MNSHRTRD)'  # 当月交易的股票数量（MNSHRTRD）

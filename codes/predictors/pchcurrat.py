@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # pchcurrat: Percentage change in current ratio (current liabilities divided by
 # current asset)

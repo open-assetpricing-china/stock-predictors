@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # turn: Average monthly trading volume for month t-3 to t-1 scaled
 # by number of shares outstanding in month t.

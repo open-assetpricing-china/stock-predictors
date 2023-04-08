@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # tang: Cash holdings + 0.715 * receivables + 0.547 * inventory + 0.535 * fixed assets / total assets.
 # 'A001101000' : cash and cash equivalents

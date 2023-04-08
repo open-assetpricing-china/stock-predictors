@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # beta: We estimate stock-level beta using weekly returns and value weighted market
 # returns for 3 years ending month t-1 with at least 52 weeks of returns.

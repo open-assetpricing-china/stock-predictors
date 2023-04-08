@@ -1,13 +1,13 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # pchsaleinv : Quarterly percentage change in sales-to-inventory.
-# 'C001001000' : Cash Received from Sales of Goods or Rendering of Services
+# 'B001100000' : Total operating revenue, ==> sales
 # 'A001123000' : Net Inventories
 import numpy as np
 def equation(x):
-    x['pchsaleinv'] = (x['C001001000'] / x['A001123000']).pct_change(periods=3)
+    x['pchsaleinv'] = (x['B001100000'] / x['A001123000']).pct_change(periods=3)
     return x
 #
 def fill_0(x):
@@ -21,7 +21,7 @@ def lag_one_month(x):
     return x
 #
 def calculation(df_input):
-    df_output = df_input['monthly'][['stkcd', 'month', 'C001001000', 'A001123000']]
+    df_output = df_input['monthly'][['stkcd', 'month', 'B001100000', 'A001123000']]
     df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
     df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
     df_output = df_output[['stkcd', 'month', 'pchsaleinv']]

@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # Average of daily (absolute return / RMB volume) in month t
 # ['Dnvaltrd'] = '日个股交易金额' # 单位： 元

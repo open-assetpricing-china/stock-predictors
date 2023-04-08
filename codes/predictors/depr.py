@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # depr: Depreciation divided by fixed assets.
 # 'D000103000' : Depreciation of Fixed Assets, Oil and Gas Assets, and Bearer Biological Assets

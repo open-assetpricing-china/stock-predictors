@@ -1,6 +1,6 @@
 '''
 @Author: Yuan Yang
-@Email: yangy7@sustech.edu.cn
+@Email: messiyuan16@gmail.com
 '''
 # tb = (current tax expense / enterprise income tax rate in China(25%))/total income
 # B002100000: Income Tax Expenses
