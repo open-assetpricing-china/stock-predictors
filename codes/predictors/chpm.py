@@ -9,7 +9,7 @@
 #
 import numpy as np
 def equation(x):
-    x['chpm'] = (x['B001100000'] / x['C001001000']).diff(periods=3)
+    x['chpm'] = (x['C001001000'] / x['B001100000']).diff(periods=3)
     return x
 def fill_0(x):
     x.replace([0,], np.nan, inplace = True)

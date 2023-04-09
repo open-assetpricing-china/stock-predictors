@@ -8,7 +8,7 @@
 # The sum of all income arising from operating business of company.
 import numpy as np
 def equation(x):
-    x['chpm'] = (x['B001100000'] / x['C001001000']).diff(periods=3)
+    x['chpm'] = (x['C001001000'] / x['B001100000']).diff(periods=3)
     return x
 #
 def mean_value(x):
