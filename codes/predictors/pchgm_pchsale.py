@@ -10,7 +10,7 @@
 import numpy as  np
 def equation(x):
     x['pchgm_pchsale'] = ((x['B001100000'] - x['B001209000']) / x['B001100000']
-                           ).pct_change(periods=3) - x['C001001000'].pct_change(periods=3)
+                           ).pct_change(periods=3) - x['B001100000'].pct_change(periods=3)
     return x
 #
 def fill_0(x):
