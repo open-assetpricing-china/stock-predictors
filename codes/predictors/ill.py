@@ -19,8 +19,14 @@ def lag_one_month(x):
     x = x.copy()
     x['ill'] = x['ill'].shift()
     return x
+#
+def check_divisor(x): # if divisor equals 0, it can lead the inf value appears. 
+    x.loc[(x['Dnvaltrd']==0),'Dnvaltrd'] = np.nan
+    return x
+#
 def calculation(df_input):
     df_output = df_input['daily'][['stkcd', 'day','month', 'dret', 'Dnvaltrd']]
+    df_output = check_divisor(df_output)
     df_output = df_output.copy()
     #df_output['Dnvaltrd'][df_output['Dnvaltrd'] < 0.1] = np.nan # 将 0 值替换为空值
     #df_output = df_output.groupby(['stkcd', 'month']).apply(lambda x: equation(x)).reset_index(drop=True)

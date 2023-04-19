@@ -105,14 +105,19 @@ def E_moving_average(x, la):
     x['E_beta_mv'] = x['beta_mv'].ewm(alpha=la, adjust=False).mean()
     return x
 #
+def check_divisor(x): # if divisor equals 0, it can lead the inf value appears. 
+    x.loc[(x['Dnshrtrd']==0),'Dnshrtrd'] = np.nan
+    x.loc[(x['Clsprc']==0),'Clsprc'] = np.nan
+    return x
+#
 def equation(x):
     x['er_trend'] = x['E_beta_mp'] * x['MP'] + x['E_beta_mv'] * x['MV']
     return x
 #
 def calculation(df_input):
     df_output = df_input['daily'][['stkcd','day','month','Clsprc','Dnshrtrd']]
-    #df_output = df_output.groupby(['stkcd', 'month']).apply(lambda x: get_ma_mv(x,lag=10)).reset_index(drop=True)
-    #df_output = df_output.groupby('stkcd').apply(lambda x: daily_to_month(x)).reset_index(drop=True)
+    df_output = check_divisor(df_output)
+    #
     df_output_MP = df_output.groupby(['stkcd', 'month']).apply(lambda x: get_MP(x,lag=10)).reset_index()
     df_output_MP.rename(columns={list(df_output_MP.columns)[-1]:'MP'}, inplace=True)
     #

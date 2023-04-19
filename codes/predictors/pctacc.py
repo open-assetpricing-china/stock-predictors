@@ -15,6 +15,7 @@
 # TA:   'A001000000', Total Assets
 # acc = [(ΔCA - ΔCASH) - (ΔCL - ΔSTD -ΔTP) - Dep] / Total Assets
 #
+import numpy as np
 def equation(df):
     df = df.copy()
     df['pctacc'] =(( (df['A001100000'].diff(periods=3) - df['A001101000'].diff(periods=3)) - (
@@ -22,6 +23,10 @@ def equation(df):
         df['B002100000'].diff(periods=3)) - (df['D000103000']
                                              + df['D000104000']) ).abs() / df['A001000000']).pct_change(periods=3)
     return df
+#
+def check_divisor(x): # if divisor equals 0, it can lead the inf value appears. 
+    x.loc[(x['A001000000']==0),'A001000000'] = np.nan
+    return x
 #
 def lag_one_month(x):
     x = x.copy()
@@ -32,6 +37,7 @@ def calculation(df_input):
     df_output = df_input['monthly'][['stkcd', 'month', 'A001100000','A001101000','A002100000',
                                      'A002125000', 'B002100000','D000103000',
                                      'D000104000','A001000000']]
+    df_output = check_divisor(df_output)
     df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
     df_output = df_output[['stkcd', 'month', 'pctacc']]
     df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)

@@ -4,6 +4,7 @@
 '''
 # herf: Sum of squared percent sales in industry for each company.
 # 'B001100000' : Total operating revenue, ==> sales
+import numpy as np
 def equation_s_p_sale(x):
     x['p_sale'] = x['B001100000' ] / x['B001100000' ].sum()
     return x

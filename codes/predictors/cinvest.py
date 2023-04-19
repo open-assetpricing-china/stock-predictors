@@ -6,9 +6,14 @@
 # prior 3 quarters
 # 'A001212000' :  Net Fixed Assets
 # 'B001100000' : Total operating revenue, ==> sales
+import numpy as np
 def equation(x):
     x['cinvest'] = (x['A001212000'] / x['B001100000']).diff(periods=3) - (
             x['A001212000'] / x['B001100000']).rolling(9).mean().shift(3)
+    return x
+#
+def check_divisor(x): # if divisor equals 0, it can lead the inf value appears. 
+    x.loc[(x['B001100000']==0),'B001100000'] = np.nan
     return x
 #
 def lag_one_month(x):
@@ -18,7 +23,8 @@ def lag_one_month(x):
 #
 def calculation(df_input):
     df = df_input['monthly']
-    df_output= df[['stkcd', 'month', 'A001212000', 'B001100000']]
+    df_output = df[['stkcd', 'month', 'A001212000', 'B001100000']]
+    df_output = check_divisor(df_output)
     df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
     df_output = df_output[['stkcd', 'month', 'cinvest']]
     df_output = df_output.groupby('stkcd').apply(lambda x: lag_one_month(x)).reset_index(drop=True)

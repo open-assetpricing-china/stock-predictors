@@ -20,6 +20,10 @@ def fill_0(x):
     x.fillna(method='ffill', inplace=True)
     return x
 #
+def check_divisor(x): # if divisor equals 0, it can lead the inf value appears. 
+    x.loc[(x['B001100000']==0),'B001100000'] = np.nan
+    return x
+#
 def lag_one_month(x):
     x = x.copy()
     x['chpm_ia'] = x['chpm_ia'].shift()
@@ -28,6 +32,7 @@ def lag_one_month(x):
 def calculation(df_input):
     df = df_input['monthly']
     df_output = df[['stkcd', 'month', 'B001100000','C001001000', 'ind_cd']]
+    df_output = check_divisor(df_output)
     df_output = df_output.groupby('stkcd').apply(lambda x: equation(x)).reset_index(drop=True)
     df_output = df_output.groupby(['month', 'ind_cd']).apply(lambda x: mean_value(x)).reset_index(drop=True)
     df_output['chpm_ia'] = df_output['chpm'] - df_output['chpm_ind_mean']
