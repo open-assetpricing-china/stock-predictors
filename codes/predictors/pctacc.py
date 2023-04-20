@@ -28,6 +28,11 @@ def check_divisor(x): # if divisor equals 0, it can lead the inf value appears.
     x.loc[(x['A001000000']==0),'A001000000'] = np.nan
     return x
 #
+def replace_inf(x):
+    x.loc[(x['pctacc'] == np.inf), 'pctacc'] = np.nan
+    x.loc[(x['pctacc'] == -np.inf), 'pctacc'] = np.nan
+    return x
+#
 def lag_one_month(x):
     x = x.copy()
     x['pctacc'] = x['pctacc'].shift()
@@ -40,5 +45,6 @@ def calculation(df_input):
     df_output = check_divisor(df_output)
     df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
     df_output = df_output[['stkcd', 'month', 'pctacc']]
+    df_output = replace_inf(df_output)
     df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)
     return df_output
