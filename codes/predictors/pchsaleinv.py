@@ -35,6 +35,6 @@ def calculation(df_input):
     df_output = df_output.groupby('stkcd').apply(equation).reset_index(drop=True)
     df_output = df_output.groupby('stkcd').apply(fill_0).reset_index(drop=True)
     df_output = df_output[['stkcd', 'month', 'pchsaleinv']]
-    df_output = check_divisor(df_output)
+    df_output = replace_inf(df_output)
     df_output = df_output.groupby('stkcd').apply(lag_one_month).reset_index(drop=True)
     return df_output
