@@ -10,16 +10,9 @@ from sklearn.model_selection import ParameterGrid
 from sklearn.linear_model import ElasticNet
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.neural_network import MLPRegressor
-
-'''You might need to change your parameter here'''
-input_path = 'monthly_predictors.parquet'
-output_path = 'Change Path'
-train_start_year = 1991
-train_year_number = 12
-val_year_number = 8
-test_year_number = 11
-model = 'RF'  # Choose Your Model from ['PLS', 'ENet', 'RF', 'GBRT', 'NN1', 'NN3', 'NN5']
-
+import warnings
+warnings.filterwarnings('ignore')
+#
 def model_choose(m):
     if m == 'PLS':
         param_grid = {
@@ -60,14 +53,28 @@ def model_choose(m):
             'hidden_layer_sizes': [(32,)],
             'activation': ['relu'],
             'solver': ['adam'],
-            'random_state': [66],
-            'alpha': [0.001, 0.00001],
-            'batch_size': [10000],
-            'learning_rate_init': [0.001, 0.01],
+            'random_state': [5,15,25,35,45],
+            'alpha': [0.01, 0.001, 0.0001, 0.00001],
+            'batch_size': [64, 512, 2048, 10000],
+            'learning_rate_init': [0.0001, 0.001, 0.01, 0.1],
             'early_stopping': [True],
             'n_iter_no_change': [10],
-            'max_iter': [500],
-            'tol': [0.0001]
+            'max_iter': [1000],
+            'tol': [0.01]
+        }
+    if m == 'NN2':
+        param_grid = {
+            'hidden_layer_sizes': [(32, 16)],
+            'activation': ['relu'],
+            'solver': ['adam'],
+            'random_state': [5,15,25,35,45],
+            'alpha': [0.01, 0.001, 0.0001, 0.00001],
+            'batch_size': [64, 512, 2048, 10000],
+            'learning_rate_init': [0.0001, 0.001, 0.01, 0.1],
+            'early_stopping': [True],
+            'n_iter_no_change': [10],
+            'max_iter': [1000],
+            'tol': [0.01]
         }
     if m == 'NN3':
         param_grid = {
@@ -75,12 +82,26 @@ def model_choose(m):
             'activation': ['relu'],
             'solver': ['adam'],
             'random_state': [5, 15, 25, 35, 45],
-            'alpha': [0.001, 0.00001],
-            'batch_size': [10000],
-            'learning_rate_init': [0.001, 0.01],
+            'alpha': [0.01, 0.001, 0.0001, 0.00001],
+            'batch_size': [64, 512, 2048, 10000],
+            'learning_rate_init': [0.0001, 0.001, 0.01, 0.1],
             'n_iter_no_change': [10],
             'early_stopping': [True],
-            'max_iter': [500],
+            'max_iter': [1000],
+            'tol': [0.01]
+        }
+    if m == 'NN4':
+        param_grid = {
+            'hidden_layer_sizes': [(32,16,8,4)],
+            'activation': ['relu'],
+            'solver': ['adam'],
+            'random_state': [5,15,25,35,45],
+            'alpha': [0.01, 0.001, 0.0001, 0.00001],
+            'batch_size': [64, 512, 2048, 10000],
+            'learning_rate_init': [0.0001, 0.001, 0.01, 0.1],
+            'early_stopping': [True],
+            'n_iter_no_change': [10],
+            'max_iter': [1000],
             'tol': [0.01]
         }
     if m == 'NN5':
@@ -89,17 +110,31 @@ def model_choose(m):
             'activation': ['relu'],
             'solver': ['adam'],
             'random_state': [5, 15, 25, 35, 45],
-            'alpha': [0.001, 0.00001],
-            'batch_size': [10000],
-            'learning_rate_init': [0.001, 0.01],
+            'alpha': [0.01, 0.001, 0.0001, 0.00001],
+            'batch_size': [64,512,2048,10000],
+            'learning_rate_init': [0.0001, 0.001, 0.01, 0.1],
             'n_iter_no_change': [10],
             'early_stopping': [True],
-            'max_iter': [500],
+            'max_iter': [1000],
+            'tol': [0.01]
+        }
+    if m == 'NN6':
+        param_grid = {
+            'hidden_layer_sizes': [(64,32,16,8,4,2)],
+            'activation': ['relu'],
+            'solver': ['adam'],
+            'random_state': [5,15,25,35,45],
+            'alpha': [0.01, 0.001, 0.0001, 0.00001],
+            'batch_size': [64, 512, 2048, 10000],
+            'learning_rate_init': [0.0001, 0.001, 0.01, 0.1],
+            'early_stopping': [True],
+            'n_iter_no_change': [10],
+            'max_iter': [1000],
             'tol': [0.01]
         }
     param_space = list(ParameterGrid(param_grid))
     return param_space, param_grid
-
+#
 def rolling(df, method, x_col, param_space, train_start, train_year, val_year, test_year):
     aggregate_r = []
     aggregate_mse = []
@@ -109,13 +144,11 @@ def rolling(df, method, x_col, param_space, train_start, train_year, val_year, t
     group_result = pd.DataFrame(columns=['r1', 'r2', 'r3', 'mse1', 'mse2', 'mse3', 'c1', 'c2', 'c3'])
 
     for i in tqdm(range(test_year)):
-
         # Define Timing Variables
         val_start = train_start + train_year + i
         train_end = val_start - 1
         val_end = val_start + val_year - 1
         test_year = val_end + 1
-
         # Split Data
         x_train, y_train = df.loc[(df['year'] >= train_start) & (df['year'] <= train_end), x_col].values, \
             df.loc[(df['year'] >= train_start) & (df['year'] <= train_end), 'ret'].values
@@ -123,9 +156,7 @@ def rolling(df, method, x_col, param_space, train_start, train_year, val_year, t
             df.loc[(df['year'] >= val_start) & (df['year'] <= val_end), 'ret'].values
         x_test, y_test = df.loc[df['year'] == test_year, x_col].values, \
             df.loc[df['year'] == test_year, 'ret'].values
-
         # Grid Search for Best Model
-
         best_score = -10000
         best_para = {}
         best_model = np.NAN
@@ -142,7 +173,13 @@ def rolling(df, method, x_col, param_space, train_start, train_year, val_year, t
                     best_model = regressor
 
             y_test_pred = best_model.predict(x_test)
-            aggregate_r.append(r2_score(y_test, y_test_pred))
+            #
+            r2_score_up = (y_test - y_test_pred) ** 2
+            r2_score_down = (y_test) ** 2
+            r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+            #
+            #aggregate_r.append(r2_score(y_test, y_test_pred))
+            aggregate_r.append(r2)
             aggregate_mse.append(mean_squared_error(y_test, y_test_pred))
             best_parameters = pd.concat([best_parameters, pd.DataFrame([best_para])])
             best_scores.append(best_score)
@@ -151,9 +188,10 @@ def rolling(df, method, x_col, param_space, train_start, train_year, val_year, t
         if method == 'PLS':
             for regress_para in param_space:
                 regressor = PLSRegression(**regress_para).fit(x_train, y_train)
-                r2_up = (y_val - regressor.predict(x_val)) ** 2
-                r2_down = (y_val) ** 2
-                score = 1 - (r2_up.sum() / r2_down.sum())
+                #r2_up = (y_val - regressor.predict(x_val)) ** 2
+                #r2_down = (y_val) ** 2
+                #score = 1 - (r2_up.sum() / r2_down.sum())
+                score = r2_score(y_val, regressor.predict(x_val))
                 if score > best_score:
                     best_score = score
                     best_para = regress_para
@@ -178,7 +216,13 @@ def rolling(df, method, x_col, param_space, train_start, train_year, val_year, t
                     best_model = regressor
 
             y_test_pred = best_model.predict(x_test)
-            aggregate_r.append(r2_score(y_test, y_test_pred))
+            #
+            r2_score_up = (y_test - y_test_pred) ** 2
+            r2_score_down = (y_test) ** 2
+            r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+            #
+            #aggregate_r.append(r2_score(y_test, y_test_pred))
+            aggregate_r.append(r2)
             aggregate_mse.append(mean_squared_error(y_test, y_test_pred))
             best_parameters = pd.concat([best_parameters, pd.DataFrame([best_para])])
             best_scores.append(best_score)
@@ -196,7 +240,13 @@ def rolling(df, method, x_col, param_space, train_start, train_year, val_year, t
                     best_model = regressor
 
             y_test_pred = best_model.predict(x_test)
-            aggregate_r.append(r2_score(y_test, y_test_pred))
+            #
+            r2_score_up = (y_test - y_test_pred) ** 2
+            r2_score_down = (y_test) ** 2
+            r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+            #
+            #aggregate_r.append(r2_score(y_test, y_test_pred))
+            aggregate_r.append(r2)
             aggregate_mse.append(mean_squared_error(y_test, y_test_pred))
             best_parameters = pd.concat([best_parameters, pd.DataFrame([best_para])])
             best_scores.append(best_score)
@@ -214,12 +264,40 @@ def rolling(df, method, x_col, param_space, train_start, train_year, val_year, t
                     best_model = regressor
 
             y_test_pred = best_model.predict(x_test)
-            aggregate_r.append(r2_score(y_test, y_test_pred))
+            #
+            r2_score_up = (y_test - y_test_pred) ** 2
+            r2_score_down = (y_test) ** 2
+            r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+            #
+            #aggregate_r.append(r2_score(y_test, y_test_pred))
+            aggregate_r.append(r2)
             aggregate_mse.append(mean_squared_error(y_test, y_test_pred))
             best_parameters = pd.concat([best_parameters, pd.DataFrame([best_para])])
             best_scores.append(best_score)
             pred_test.extend(y_test_pred)
-
+        #
+        if method == 'NN2':
+            for regress_para in param_space:
+                regressor = MLPRegressor(**regress_para).fit(x_train, y_train)
+                r2_up = (y_val - regressor.predict(x_val)) ** 2
+                r2_down = (y_val) ** 2
+                score = 1 - (r2_up.sum() / r2_down.sum())
+                if score > best_score:
+                    best_score = score
+                    best_para = regress_para
+                    best_model = regressor
+            y_test_pred = best_model.predict(x_test)
+            #
+            r2_score_up = (y_test - y_test_pred) ** 2
+            r2_score_down = (y_test) ** 2
+            r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+            #
+            #aggregate_r.append(r2_score(y_test, y_test_pred))
+            aggregate_r.append(r2)
+            aggregate_mse.append(mean_squared_error(y_test, y_test_pred))
+            best_parameters = pd.concat([best_parameters, pd.DataFrame([best_para])])
+            best_scores.append(best_score)
+            pred_test.extend(y_test_pred)
         if method == 'NN3':
             for regress_para in param_space:
                 regressor = MLPRegressor(**regress_para).fit(x_train, y_train)
@@ -230,14 +308,42 @@ def rolling(df, method, x_col, param_space, train_start, train_year, val_year, t
                     best_score = score
                     best_para = regress_para
                     best_model = regressor
-
             y_test_pred = best_model.predict(x_test)
-            aggregate_r.append(r2_score(y_test, y_test_pred))
+            #
+            r2_score_up = (y_test - y_test_pred) ** 2
+            r2_score_down = (y_test) ** 2
+            r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+            #
+            #aggregate_r.append(r2_score(y_test, y_test_pred))
+            aggregate_r.append(r2)
             aggregate_mse.append(mean_squared_error(y_test, y_test_pred))
             best_parameters = pd.concat([best_parameters, pd.DataFrame([best_para])])
             best_scores.append(best_score)
             pred_test.extend(y_test_pred)
-
+        #
+        if method == 'NN4':
+            for regress_para in param_space:
+                regressor = MLPRegressor(**regress_para).fit(x_train, y_train)
+                r2_up = (y_val - regressor.predict(x_val)) ** 2
+                r2_down = (y_val) ** 2
+                score = 1 - (r2_up.sum() / r2_down.sum())
+                if score > best_score:
+                    best_score = score
+                    best_para = regress_para
+                    best_model = regressor
+            y_test_pred = best_model.predict(x_test)
+            #
+            r2_score_up = (y_test - y_test_pred) ** 2
+            r2_score_down = (y_test) ** 2
+            r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+            #
+            #aggregate_r.append(r2_score(y_test, y_test_pred))
+            aggregate_r.append(r2)
+            aggregate_mse.append(mean_squared_error(y_test, y_test_pred))
+            best_parameters = pd.concat([best_parameters, pd.DataFrame([best_para])])
+            best_scores.append(best_score)
+            pred_test.extend(y_test_pred)
+        #
         if method == 'NN5':
             for regress_para in param_space:
                 regressor = MLPRegressor(**regress_para).fit(x_train, y_train)
@@ -250,52 +356,98 @@ def rolling(df, method, x_col, param_space, train_start, train_year, val_year, t
                     best_model = regressor
 
             y_test_pred = best_model.predict(x_test)
-            aggregate_r.append(r2_score(y_test, y_test_pred))
+            #
+            r2_score_up = (y_test - y_test_pred) ** 2
+            r2_score_down = (y_test) ** 2
+            r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+            #
+            #aggregate_r.append(r2_score(y_test, y_test_pred))
+            aggregate_r.append(r2)
             aggregate_mse.append(mean_squared_error(y_test, y_test_pred))
             best_parameters = pd.concat([best_parameters, pd.DataFrame([best_para])])
             best_scores.append(best_score)
             pred_test.extend(y_test_pred)
+        #
+        if method == 'NN6':
+            for regress_para in param_space:
+                regressor = MLPRegressor(**regress_para).fit(x_train, y_train)
+                r2_up = (y_val - regressor.predict(x_val)) ** 2
+                r2_down = (y_val) ** 2
+                score = 1 - (r2_up.sum() / r2_down.sum())
+                if score > best_score:
+                    best_score = score
+                    best_para = regress_para
+                    best_model = regressor
 
-        print(best_para)
-        print(best_score)
-
+            y_test_pred = best_model.predict(x_test)
+            #
+            r2_score_up = (y_test - y_test_pred) ** 2
+            r2_score_down = (y_test) ** 2
+            r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+            #
+            #aggregate_r.append(r2_score(y_test, y_test_pred))
+            aggregate_r.append(r2)
+            aggregate_mse.append(mean_squared_error(y_test, y_test_pred))
+            best_parameters = pd.concat([best_parameters, pd.DataFrame([best_para])])
+            best_scores.append(best_score)
+            pred_test.extend(y_test_pred)
+        print('best_para:\n', best_para)
+        print('best_score:\n', best_score)
+        #
         # Record Model Prediction (Group)
-
         group = pd.DataFrame(columns=['y_test', 'y_test_pred'])
         group['y_test'] = y_test
         group['y_test_pred'] = y_test_pred
 
         temp = group[group['y_test'] < group['y_test'].quantile(0.1)]
-        group_result.loc[i, 'r1'] = r2_score(temp['y_test'], temp['y_test_pred'])
+        #
+        r2_score_up = (temp['y_test'] - temp['y_test_pred']) ** 2
+        r2_score_down = (temp['y_test']) ** 2
+        r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+        #
+        #group_result.loc[i, 'r1'] = r2_score(temp['y_test'], temp['y_test_pred'])
+        group_result.loc[i, 'r1'] = r2
         group_result.loc[i, 'mse1'] = mean_squared_error(temp['y_test'], temp['y_test_pred'])
         group_result.loc[i, 'c1'] = temp['y_test'].count()
 
         temp = group[
             (group['y_test'] <= group['y_test'].quantile(0.9)) & (group['y_test'] >= group['y_test'].quantile(0.1))]
-        group_result.loc[i, 'r2'] = r2_score(temp['y_test'], temp['y_test_pred'])
+        #
+        r2_score_up = (temp['y_test'] - temp['y_test_pred']) ** 2
+        r2_score_down = (temp['y_test']) ** 2
+        r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+        #
+        #group_result.loc[i, 'r2'] = r2_score(temp['y_test'], temp['y_test_pred'])
+        group_result.loc[i, 'r2'] = r2
         group_result.loc[i, 'mse2'] = mean_squared_error(temp['y_test'], temp['y_test_pred'])
         group_result.loc[i, 'c2'] = temp['y_test'].count()
 
         temp = group[group['y_test'] > group['y_test'].quantile(0.9)]
-        group_result.loc[i, 'r3'] = r2_score(temp['y_test'], temp['y_test_pred'])
+        #
+        r2_score_up = (temp['y_test'] - temp['y_test_pred']) ** 2
+        r2_score_down = (temp['y_test']) ** 2
+        r2 = 1 - (r2_score_up.sum() / r2_score_down.sum())
+        #
+        #group_result.loc[i, 'r3'] = r2_score(temp['y_test'], temp['y_test_pred'])
+        group_result.loc[i, 'r3'] = r2
         group_result.loc[i, 'mse3'] = mean_squared_error(temp['y_test'], temp['y_test_pred'])
         group_result.loc[i, 'c3'] = temp['y_test'].count()
-
+    #
     result = pd.concat([group_result, pd.DataFrame(aggregate_r, columns=['outsample_r'])], axis=1)
-    result = pd.concat([result, pd.DataFrame(best_scores, columns=['insample_mse'])], axis=1)
+    result = pd.concat([result, pd.DataFrame(best_scores, columns=['insample_r'])], axis=1) ##
     result = pd.concat([result, pd.DataFrame(aggregate_mse, columns=['outsample_mse'])], axis=1)
     result = pd.concat([result, best_parameters.reset_index(drop=True)], axis=1)
-
     # 更改test年份
     df_sr = pd.concat([df.loc[(df['year'] >= (train_start + train_year + val_year)) &
                               (df['year'] <= (train_start + train_year + val_year + test_year - 1)),
                               ['month', 'stkcd', 'ret']].reset_index(drop=True),
                        pd.DataFrame(pred_test, columns=['pred_ret'])], axis=1)
-
     return result, df_sr
-
+#
 def cal_sr(df):
+    # 得到每月机器学习预测收益的 0.9 十分位数
     long_port = df.groupby('month').pred_ret.quantile(0.9).reset_index()
+    # 得到每月机器学习预测收益的 0.1 十分位数
     short_port = df.groupby('month').pred_ret.quantile(0.1).reset_index()
     long_port = long_port.rename(columns={'pred_ret': 'long'})
     short_port = short_port.rename(columns={'pred_ret': 'short'})
@@ -303,15 +455,21 @@ def cal_sr(df):
     df1 = pd.merge(df, long_port, on='month')
     df1 = pd.merge(df1, short_port, on='month')
 
-    df_long = df1[df1['pred_ret'] >= df1['long']].reset_index(drop=True)
+    # 根据机器学习预测的收益率取得每月做多是投资组合
+    df_long = df1[df1['pred_ret'] >= df1['long']].reset_index(drop=True) #
+    # 计算更具机器学习构造的每月做多投资组合的平权平均收益
     df_long_pred = df_long.groupby('month').pred_ret.mean().reset_index()
     df_long_pred = df_long_pred.rename(columns={'pred_ret': 'pred_long'})
+    # 每月根据机器学习做多的投资组合在市场中真实收益的平权平均
     df_long_avg = df_long.groupby('month').ret.mean().reset_index()
     df_long_avg = df_long_avg.rename(columns={'ret': 'ret_long'})
-
+    #
+    # 根据机器学习预测的收益率取得每月做空的投资组合
     df_short = df1[df1['pred_ret'] <= df1['short']].reset_index(drop=True)
+    # 计算根据机器学习构造的每月做空的投资组合的平权平均收益
     df_short_pred = df_short.groupby('month').pred_ret.mean().reset_index()
     df_short_pred = df_short_pred.rename(columns={'pred_ret': 'pred_short'})
+    # 每月根据机器学习做空的投资组合在市场中真实收益的平权平均
     df_short_avg = df_short.groupby('month').ret.mean().reset_index()
     df_short_avg = df_short_avg.rename(columns={'ret': 'ret_short'})
 
@@ -349,32 +507,48 @@ def standardize(df):
         df = df.drop(['%s_rank' % col_name, '%s' % col_name, 'count'], axis=1)
     df = df.fillna(0)
     return df
+#
+if __name__ == '__main__':
+    '''You might need to change your parameter here'''
+    input_path = 'monthly_predictors.parquet'
+    output_path = './result/'
+    train_start_year = 2000
+    train_year_number = 9
+    val_year_number = 3
+    test_year_number = 10
+    model = 'NN3'  # Choose Your Model from ['PLS', 'ENet', 'RF', 'GBRT', 'NN1','NN2','NN3','NN4','NN5','NN6']
+    #
+    with open(input_path, 'rb') as f:
+        df = pd.read_parquet(f)
+    df = df.rename(columns={'mret': 'ret'})
+    # Fill NaN with Median then 0; Then standardize data
+    df = df.fillna(df.groupby('month').transform('median'))
+    df = df.fillna(0)
+    df = df.sort_values(by=['month', 'stkcd']).reset_index(drop=True)
+    df = standardize(df)
+    #
+    df.insert(0, 'year', pd.to_datetime(df['month'], format='%Y-%m').dt.year)
+    df = df[(df['year'] >= train_start_year)]
+    col_names = df.columns.values.tolist()
+    list_to_remove = ['stkcd', 'ret', 'year', 'month']
+    x_col_names = list(set(col_names).difference(set(list_to_remove)))
 
-with open(input_path, 'rb') as f:
-    df = pd.read_parquet(f)
-df = df.rename(columns={'mret':'ret'})
-# Fill NaN with Median then 0; Then standardize data
-df = df.fillna(df.groupby('month').transform('median'))
-df = df.fillna(0)
-df = df.sort_values(by=['month', 'stkcd']).reset_index(drop=True)
-df = standardize(df)
+    param_grid, param_collection = model_choose(model)
+    test_result, test_sr = rolling(df, method=model, x_col=x_col_names, param_space=param_grid,
+                                   train_start=train_start_year, train_year=train_year_number, val_year=val_year_number,
+                                   test_year=test_year_number)
+    print(f'{train_start_year}, {train_year_number + val_year_number + test_year_number} years result\n'
+          'Model: ' + model)
+    print(param_collection)
+    a, b, c, d, e = cal_sr(test_sr)
+    print(f'Equal_Weight: r2_score:{e}, pred_mean:{a}\n'
+          f'avg_mean:{b}, avg_std:{c}, avg_sr:{d}')
+    print('train_start_year:', train_start_year)
+    print('train_year_number:', train_year_number)
+    print('val_year_number:', val_year_number)
+    print('test_year_number:', test_year_number)
+    #
+    feather.write_feather(test_result, output_path + '%s_result_yearly.feather' % model)
+    feather.write_feather(test_sr, output_path + '%s_result_stocks.feather' % model)
 
-df.insert(0, 'year', pd.to_datetime(df['month'], format='%Y-%m').dt.year)
-df = df[(df['year'] >= 1991)]
-col_names = df.columns.values.tolist()
-list_to_remove = ['stkcd', 'ret', 'year', 'month']
-x_col_names = list(set(col_names).difference(set(list_to_remove)))
 
-param_grid, param_collection = model_choose(model)
-test_result, test_sr = rolling(df, method=model, x_col=x_col_names, param_space= param_grid,
-                               train_start=train_start_year, train_year=train_year_number, val_year=val_year_number,
-                               test_year=test_year_number)
-print(f'{train_start_year}, {train_year_number+val_year_number+test_year_number} years result\n'
-      'Model: ' + model)
-print(param_collection)
-a, b, c, d, e = cal_sr(test_sr)
-print(f'Equal_Weight: r2_score:{e}, pred_mean:{a}\n'
-      f'avg_mean:{b}, avg_std:{c}, avg_sr:{d}')
-
-feather.write_feather(test_result, output_path + '%s_result_yearly.feather' % model)
-feather.write_feather(test_sr, output_path + '/home/suyang/%s_result_stocks.feather' % model)
